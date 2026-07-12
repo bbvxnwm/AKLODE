@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مولد QR كود - النظام</title>
+    <!-- مكتبات خارجية -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Tahoma', sans-serif;
+            background: #f4f7fc;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .page {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .page.active {
+            display: flex;
+        }
+        input {
+            padding: 14px 16px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: 0.3s;
+            width: 100%;
+        }
+        input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            background: #2980b9;
+            transform: scale(1.02);
+        }
+        .btn-success {
+            background: #2ecc71;
+        }
+        .btn-success:hover {
+            background: #27ae60;
+        }
+        .qr-box {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        .info-card {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: right;
+        }
+        .info-card p {
+            font-size: 18px;
+            margin: 8px 0;
+        }
+        .info-card span {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .note {
+            color: #e74c3c;
+            font-size: 14px;
+            background: #fde8e8;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .footer-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .footer-actions .btn {
+            flex: 1;
+            min-width: 120px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+
+    <!-- ========== الصفحة 1: الرئيسية (الأدمن) ========== -->
+    <div class="page active" id="page-home">
+        <h1>📱 مولد QR للأدمن</h1>
+        <p style="color: #7f8c8d; margin-bottom: 15px;">أنشئ كوداً سريعاً لعرض بيانات الدخول للزبون</p>
+        <button class="btn" onclick="goToData()">➕ توليد QR جديد</button>
+    </div>
+
+    <!-- ========== الصفحة 2: إدخال البيانات ========== -->
+    <div class="page" id="page-data">
+        <h1>✏️ أدخل بيانات الزبون</h1>
+        <input type="email" id="emailInput" placeholder="البريد الإلكتروني" value="customer@example.com">
+        <input type="text" id="passInput" placeholder="كلمة المرور" value="123456">
+        <button class="btn btn-success" onclick="generateQR()">🚀 توليد QR الآن</button>
+        <button class="btn" style="background:#95a5a6;" onclick="goHome()">↩️ رجوع</button>
+    </div>
+
+    <!-- ========== الصفحة 3: عرض النتيجة + PDF ========== -->
+    <div class="page" id="page-result">
+        <h1>✅ تم التوليد!</h1>
+        <div class="qr-box" id="qrcode-container"></div>
+        <div class="info-card">
+            <p><span>📧 الإيميل:</span> <span id="displayEmail">---</span></p>
+            <p><span>🔑 الباسورد:</span> <span id="displayPass">---</span></p>
+        </div>
+        <div class="footer-actions">
+            <button class="btn" onclick="downloadPDF()">📄 تحميل PDF</button>
+            <button class="btn" style="background:#e67e22;" onclick="goHome()">🏠 الصفحة الرئيسية</button>
+        </div>
+        <p class="note">📌 انسخ هذا الـ QR وضعه في أي مكان، الزبون سيمسحه ويرى البيانات أعلاه فقط!</p>
+    </div>
+
+    <!-- ========== الصفحة 4: صفحة الزبون (تظهر بعد مسح QR) ========== -->
+    <div class="page" id="page-client">
+        <h1>👋 مرحباً زبوننا العزيز</h1>
+        <p style="color: #7f8c8d;">هذه بيانات الدخول الخاصة بك:</p>
+        <div class="info-card" style="background: #d5f5e3;">
+            <p><span>📧 الإيميل:</span> <span id="clientEmail">---</span></p>
+            <p><span>🔑 الباسورد:</span> <span id="clientPass">---</span></p>
+        </div>
+        <button class="btn" style="background:#8e44ad;" onclick="goHome()">🏠 العودة للرئيسية</button>
+    </div>
+
+</div>
+
+<script>
+    // ---------- متغيرات عامة ----------
+    let qrCodeInstance = null;          // لحفظ كائن QR
+    let currentEmail = '';
+    let currentPass = '';
+
+    // ---------- التنقل بين الصفحات ----------
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+    }
+
+    function goHome() {
+        showPage('page-home');
+    }
+
+    function goToData() {
+        showPage('page-data');
+        // مسح الحقول السابقة
+        document.getElementById('emailInput').value = '';
+        document.getElementById('passInput').value = '';
+    }
+
+    // ---------- توليد QR ----------
+    function generateQR() {
+        const email = document.getElementById('emailInput').value.trim();
+        const pass = document.getElementById('passInput').value.trim();
+
+        if (!email || !pass) {
+            alert('الرجاء ملء الإيميل وكلمة المرور!');
+            return;
+        }
+
+        // حفظ البيانات الحالية
+        currentEmail = email;
+        currentPass = pass;
+
+        // 1. نضع البيانات في صفحة النتيجة
+        document.getElementById('displayEmail').textContent = email;
+        document.getElementById('displayPass').textContent = pass;
+
+        // 2. نبني رابط صفحة الزبون (هنا نستخدم رابط الصفحة الحالية مع بارامترات)
+        //    حتى إذا مسح الزبون الكود، يفتح نفس الموقع لكن مع عرض البيانات فقط
+        const baseUrl = window.location.href.split('?')[0]; // نأخذ الرابط الأساسي بدون أي بارامترات
+        const clientUrl = baseUrl + '?mode=client&email=' + encodeURIComponent(email) + '&pass=' + encodeURIComponent(pass);
+
+        // 3. نمسح الـ QR القديم إن وجد
+        const container = document.getElementById('qrcode-container');
+        container.innerHTML = '';
+
+        // 4. ننشئ QR جديد
+        qrCodeInstance = new QRCode(container, {
+            text: clientUrl,
+            width: 200,
+            height: 200,
+            colorDark: "#2c3e50",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H  // مستوى عالٍ من التصحيح
+        });
+
+        // 5. ننتقل لصفحة النتيجة
+        showPage('page-result');
+    }
+
+    // ---------- تحميل PDF ----------
+    function downloadPDF() {
+        if (!currentEmail || !currentPass) {
+            alert('لا توجد بيانات لعمل PDF!');
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // عنوان
+        doc.setFontSize(20);
+        doc.text('بيانات الدخول - QR Code', 20, 30);
+
+        // بيانات
+        doc.setFontSize(14);
+        doc.text(`الإيميل: ${currentEmail}`, 20, 60);
+        doc.text(`كلمة المرور: ${currentPass}`, 20, 80);
+
+        // تحذير
+        doc.setFontSize(10);
+        doc.setTextColor(150);
+        doc.text('هذه البيانات خاصة بالزبون فقط', 20, 110);
+
+        // حفظ الملف
+        doc.save('QR_Data.pdf');
+    }
+
+    // ---------- التحقق من وجود صفحة الزبون عند فتح الرابط ----------
+    function checkClientMode() {
+        const params = new URLSearchParams(window.location.search);
+        const mode = params.get('mode');
+        const email = params.get('email');
+        const pass = params.get('pass');
+
+        if (mode === 'client' && email && pass) {
+            // إخفاء كل الصفحات وإظهار صفحة الزبون
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-client').classList.add('active');
+            document.getElementById('clientEmail').textContent = decodeURIComponent(email);
+            document.getElementById('clientPass').textContent = decodeURIComponent(pass);
+        }
+    }
+
+    // ---------- عند تحميل الصفحة نتحقق ----------
+    window.onload = function() {
+        checkClientMode();
+
+        // إذا لم تكن صفحة زبون، نبقى على الصفحة الرئيسية
+        // (تأكد أن الصفحة الرئيسية active افتراضياً)
+        if (!document.querySelector('.page.active')) {
+            goHome();
+        }
+    };
+
+    // لإزالة البارامترات من الرابط بعد التحميل (لعدم إرباك الزبون)
+    // لكن نتركها لأنها مفيدة لمشاركة الرابط
+</script>
+
+</body>
+</html>
