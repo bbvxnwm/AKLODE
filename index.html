@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مولد QR كود - النظام</title>
+    <title>مولد QR كود - البيت الرقمي</title>
     <!-- مكتبات خارجية -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -20,6 +20,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
         }
         .container {
             background: white;
@@ -29,11 +30,28 @@
             width: 100%;
             max-width: 500px;
             text-align: center;
+            position: relative;
+        }
+        /* ===== شعار البيت الرقمي ===== */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo-container img {
+            max-width: 120px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         h1 {
             color: #2c3e50;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-size: 24px;
+        }
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 20px;
         }
         .page {
             display: none;
@@ -114,16 +132,61 @@
         .hidden {
             display: none;
         }
+        /* ===== تذييل الحقوق ===== */
+        .footer-copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            text-align: center;
+            color: #95a5a6;
+            font-size: 14px;
+        }
+        .footer-copyright strong {
+            color: #2c3e50;
+        }
+        .footer-copyright .heart {
+            color: #e74c3c;
+        }
+
+        /* ===== صفحة الزبون (مقفلة تماماً) ===== */
+        #page-client .info-card {
+            text-align: center;
+            padding: 25px;
+            border-radius: 16px;
+            background: #d5f5e3;
+        }
+        #page-client .info-card p {
+            font-size: 20px;
+            margin: 15px 0;
+        }
+        #page-client .info-card span {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        .client-warning {
+            color: #95a5a6;
+            font-size: 13px;
+            margin-top: 25px;
+        }
+        /* منع تحديد النص في صفحة الزبون (اختياري) */
+        #page-client {
+            user-select: none;
+        }
     </style>
 </head>
 <body>
 
 <div class="container" id="app">
 
+    <!-- ===== شعار البيت الرقمي ===== -->
+    <div class="logo-container">
+        <img src="images/ajpg.jpg" alt="البيت الرقمي" onerror="this.style.display='none'">
+    </div>
+
     <!-- ========== الصفحة 1: الرئيسية (الأدمن) ========== -->
     <div class="page active" id="page-home">
-        <h1>📱 مولد QR للأدمن</h1>
-        <p style="color: #7f8c8d; margin-bottom: 15px;">أنشئ كوداً سريعاً لعرض بيانات الدخول للزبون</p>
+        <h1>📱 مولد QR</h1>
+        <p class="subtitle">أنشئ كوداً سريعاً لعرض بيانات الدخول للزبون</p>
         <button class="btn" onclick="goToData()">➕ توليد QR جديد</button>
     </div>
 
@@ -151,22 +214,33 @@
         <p class="note">📌 انسخ هذا الـ QR وضعه في أي مكان، الزبون سيمسحه ويرى البيانات أعلاه فقط!</p>
     </div>
 
-    <!-- ========== الصفحة 4: صفحة الزبون (تظهر بعد مسح QR) ========== -->
+    <!-- ========== الصفحة 4: صفحة الزبون (مقفلة تماماً بدون أزرار) ========== -->
     <div class="page" id="page-client">
-        <h1>👋 مرحباً زبوننا العزيز</h1>
-        <p style="color: #7f8c8d;">هذه بيانات الدخول الخاصة بك:</p>
-        <div class="info-card" style="background: #d5f5e3;">
-            <p><span>📧 الإيميل:</span> <span id="clientEmail">---</span></p>
-            <p><span>🔑 الباسورد:</span> <span id="clientPass">---</span></p>
+        <div style="text-align: center; padding: 20px 0;">
+            <h1 style="color: #2c3e50;">👋 مرحباً بك</h1>
+            <p style="color: #7f8c8d; margin-bottom: 30px;">هذه بيانات الدخول الخاصة بك:</p>
+            
+            <div class="info-card">
+                <p><span>📧 الإيميل:</span> <span id="clientEmail">---</span></p>
+                <p><span>🔑 الباسورد:</span> <span id="clientPass">---</span></p>
+            </div>
+            
+            <!-- تحذير بدلاً من الأزرار -->
+            <p class="client-warning">⚠️ هذه المعلومات سرية ولا تشاركها مع أي شخص</p>
         </div>
-        <button class="btn" style="background:#8e44ad;" onclick="goHome()">🏠 العودة للرئيسية</button>
+    </div>
+
+    <!-- ===== تذييل الحقوق ===== -->
+    <div class="footer-copyright">
+        © 2026 <strong>البيت الرقمي</strong> 
+        <span class="heart">❤️</span> جميع الحقوق محفوظة
     </div>
 
 </div>
 
 <script>
     // ---------- متغيرات عامة ----------
-    let qrCodeInstance = null;          // لحفظ كائن QR
+    let qrCodeInstance = null;
     let currentEmail = '';
     let currentPass = '';
 
@@ -182,7 +256,6 @@
 
     function goToData() {
         showPage('page-data');
-        // مسح الحقول السابقة
         document.getElementById('emailInput').value = '';
         document.getElementById('passInput').value = '';
     }
@@ -197,38 +270,31 @@
             return;
         }
 
-        // حفظ البيانات الحالية
         currentEmail = email;
         currentPass = pass;
 
-        // 1. نضع البيانات في صفحة النتيجة
         document.getElementById('displayEmail').textContent = email;
         document.getElementById('displayPass').textContent = pass;
 
-        // 2. نبني رابط صفحة الزبون (هنا نستخدم رابط الصفحة الحالية مع بارامترات)
-        //    حتى إذا مسح الزبون الكود، يفتح نفس الموقع لكن مع عرض البيانات فقط
-        const baseUrl = window.location.href.split('?')[0]; // نأخذ الرابط الأساسي بدون أي بارامترات
+        const baseUrl = window.location.href.split('?')[0];
         const clientUrl = baseUrl + '?mode=client&email=' + encodeURIComponent(email) + '&pass=' + encodeURIComponent(pass);
 
-        // 3. نمسح الـ QR القديم إن وجد
         const container = document.getElementById('qrcode-container');
         container.innerHTML = '';
 
-        // 4. ننشئ QR جديد
         qrCodeInstance = new QRCode(container, {
             text: clientUrl,
             width: 200,
             height: 200,
             colorDark: "#2c3e50",
             colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H  // مستوى عالٍ من التصحيح
+            correctLevel: QRCode.CorrectLevel.H
         });
 
-        // 5. ننتقل لصفحة النتيجة
         showPage('page-result');
     }
 
-    // ---------- تحميل PDF ----------
+    // ---------- تحميل PDF مع حقوق البيت الرقمي ----------
     function downloadPDF() {
         if (!currentEmail || !currentPass) {
             alert('لا توجد بيانات لعمل PDF!');
@@ -238,25 +304,34 @@
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
 
-        // عنوان
-        doc.setFontSize(20);
-        doc.text('بيانات الدخول - QR Code', 20, 30);
+        // إضافة شعار (اختياري) - يمكنك إضافة صورة إذا أردت
+        // doc.addImage('images/ajpg.jpg', 'JPEG', 20, 10, 30, 30);
 
-        // بيانات
-        doc.setFontSize(14);
-        doc.text(`الإيميل: ${currentEmail}`, 20, 60);
-        doc.text(`كلمة المرور: ${currentPass}`, 20, 80);
+        // عنوان مع اسم البيت الرقمي
+        doc.setFontSize(22);
+        doc.setTextColor(44, 62, 80);
+        doc.text('البيت الرقمي - QR Code', 20, 30);
 
-        // تحذير
+        // خط فاصل
+        doc.setDrawColor(200);
+        doc.line(20, 38, 190, 38);
+
+        // البيانات
+        doc.setFontSize(16);
+        doc.setTextColor(0);
+        doc.text(`📧 الإيميل: ${currentEmail}`, 20, 60);
+        doc.text(`🔑 كلمة المرور: ${currentPass}`, 20, 80);
+
+        // حقوق النشر
         doc.setFontSize(10);
         doc.setTextColor(150);
-        doc.text('هذه البيانات خاصة بالزبون فقط', 20, 110);
+        doc.text('© 2026 البيت الرقمي - جميع الحقوق محفوظة', 20, 270);
 
         // حفظ الملف
         doc.save('QR_Data.pdf');
     }
 
-    // ---------- التحقق من وجود صفحة الزبون عند فتح الرابط ----------
+    // ---------- صفحة الزبون (مقفلة) ----------
     function checkClientMode() {
         const params = new URLSearchParams(window.location.search);
         const mode = params.get('mode');
@@ -264,27 +339,27 @@
         const pass = params.get('pass');
 
         if (mode === 'client' && email && pass) {
-            // إخفاء كل الصفحات وإظهار صفحة الزبون
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('page-client').classList.add('active');
+            const clientPage = document.getElementById('page-client');
+            clientPage.classList.add('active');
             document.getElementById('clientEmail').textContent = decodeURIComponent(email);
             document.getElementById('clientPass').textContent = decodeURIComponent(pass);
+
+            // 🔒 منع زر الرجوع في المتصفح
+            history.pushState(null, null, location.href);
+            window.onpopstate = function () {
+                history.go(1);
+            };
         }
     }
 
-    // ---------- عند تحميل الصفحة نتحقق ----------
+    // ---------- عند تحميل الصفحة ----------
     window.onload = function() {
         checkClientMode();
-
-        // إذا لم تكن صفحة زبون، نبقى على الصفحة الرئيسية
-        // (تأكد أن الصفحة الرئيسية active افتراضياً)
         if (!document.querySelector('.page.active')) {
             goHome();
         }
     };
-
-    // لإزالة البارامترات من الرابط بعد التحميل (لعدم إرباك الزبون)
-    // لكن نتركها لأنها مفيدة لمشاركة الرابط
 </script>
 
 </body>
