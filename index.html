@@ -3,659 +3,781 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>البيت الرقمي - نظام إدارة وتوليد QR كود الحصري</title>
-    <meta name="description" content="نظام البيت الرقمي لإدارة وتوليد أكواد الدخول">
+    <title>البيت الرقمي - نظام Liquid Glass المتطور</title>
+    <meta name="description" content="نظام البيت الرقمي لإدارة وتوليد أكواد الدخول بتأثير الزجاج السائل">
+    
+    <!-- استدعاء المكتبات الخارجية الأساسية بدون اختصار -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
     <style>
+        :root {
+            --turquoise-bright: #00f2fe;
+            --turquoise-dark: #008b94;
+            --orange-bright: #ff7a00;
+            --orange-glow: #ff9f43;
+            --glass-bg: rgba(255, 255, 255, 0.22);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --text-main: #ffffff;
+            --text-dark: #111e25;
+            --text-secondary: #e2e8f0;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
+
+        /* ===== خلفية الزجاج السائل الديناميكية المتموجة ===== */
         body {
             font-family: 'Tahoma', sans-serif;
-            background: #f4f7fc;
+            background: linear-gradient(135deg, #004d55 0%, #111827 50%, #8f4400 100%);
+            background-size: 400% 400%;
+            animation: liquidBackground 16s ease infinite;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
         }
+
+        @keyframes liquidBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* كرات الهالة المضيئة المتحركة بالخلفية لتعميق تأثير الزجاج */
+        .liquid-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: -1;
+            opacity: 0.45;
+            pointer-events: none;
+        }
+        .blob-1 { top: -15%; left: -10%; width: 450px; height: 450px; background: var(--turquoise-bright); animation: drift 14s infinite alternate; }
+        .blob-2 { bottom: -15%; right: -10%; width: 500px; height: 500px; background: var(--orange-bright); animation: drift 18s infinite alternate-reverse; }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 40px) scale(1.15); }
+        }
+
+        /* ===== حاوية الزجاج السائل الشفافة الرئيسية ===== */
         .container {
-            background: white;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border: 1px solid var(--glass-border);
             padding: 40px 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-radius: 28px;
+            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.35), 
+                        inset 0 1px 1px rgba(255, 255, 255, 0.35);
             width: 100%;
-            max-width: 700px;
+            max-width: 720px;
             text-align: center;
             position: relative;
+            z-index: 1;
         }
-        /* ===== شعار البيت الرقمي ===== */
+
+        /* ===== شعار متجر البيت الرقمي ===== */
         .logo-container {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
         .logo-container img {
             max-width: 120px;
             height: auto;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 22px;
+            border: 2px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.25);
         }
-        /* ===== عنوان البيت الرقمي ===== */
+
+        /* ===== الهوية والعناوين ===== */
         .brand-title {
-            color: #2c3e50;
-            font-size: 24px;
+            color: #ffffff;
+            font-size: 30px;
             font-weight: bold;
-            margin-bottom: 5px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+            margin-bottom: 6px;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+            letter-spacing: 0.5px;
         }
         .brand-title span {
-            color: #3498db;
+            color: var(--turquoise-bright);
+            text-shadow: 0 0 18px rgba(0, 242, 254, 0.7);
         }
         .subtitle {
-            color: #7f8c8d;
+            color: var(--text-secondary);
             font-size: 15px;
-            margin-bottom: 20px;
-            font-weight: bold;
+            margin-bottom: 25px;
+            font-weight: 500;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
         }
+        h1 {
+            color: #ffffff;
+            font-size: 25px;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* نظام إدارة الصفحات المتنقلة */
         .page {
             display: none;
             flex-direction: column;
-            gap: 20px;
+            gap: 22px;
         }
         .page.active {
             display: flex;
         }
+
+        /* ===== الحقول الزجاجية المدعمة بلون النص المعاكس للوضوح ===== */
         input, textarea {
-            padding: 14px 16px;
-            border: 2px solid #ddd;
-            border-radius: 12px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
             font-size: 16px;
-            transition: 0.3s;
+            color: #ffffff;
+            font-weight: bold;
+            transition: all 0.3s ease;
             width: 100%;
             font-family: 'Tahoma', sans-serif;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        input::placeholder, textarea::placeholder {
+            color: #cbd5e1;
+            font-weight: normal;
         }
         input:focus, textarea:focus {
-            border-color: #3498db;
+            background: rgba(255, 255, 255, 0.35);
+            border-color: var(--turquoise-bright);
             outline: none;
-            box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.6), inset 0 1px 2px rgba(0, 0, 0, 0.1);
         }
         textarea {
-            min-height: 80px;
+            min-height: 95px;
             resize: vertical;
         }
+
+        /* ===== أزرار الهوية المضيئة (تركوازي وبرتقالي متوهج) ===== */
         .btn {
-            background: #3498db;
             color: white;
             border: none;
-            padding: 14px;
-            border-radius: 12px;
+            padding: 15px;
+            border-radius: 16px;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            display: inline-block;
+            width: 100%;
         }
         .btn:hover {
-            background: #2980b9;
-            transform: scale(1.02);
+            transform: translateY(-2px);
+            filter: brightness(1.15);
         }
-        .btn-success { background: #2ecc71; }
-        .btn-success:hover { background: #27ae60; }
-        .btn-danger { background: #e74c3c; }
-        .btn-danger:hover { background: #c0392b; }
-        .btn-warning { background: #f39c12; }
-        .btn-warning:hover { background: #e67e22; }
-        .btn-purple { background: #8e44ad; }
-        .btn-purple:hover { background: #7d3c98; }
+        .btn-success { 
+            background: linear-gradient(135deg, var(--turquoise-bright), var(--turquoise-dark));
+            box-shadow: 0 5px 18px rgba(0, 242, 254, 0.4);
+        }
+        .btn-orange {
+            background: linear-gradient(135deg, var(--orange-bright), #cc6200);
+            box-shadow: 0 5px 18px rgba(255, 122, 0, 0.45);
+        }
+        .btn-danger { 
+            background: linear-gradient(135deg, #ff4757, #c0392b); 
+            box-shadow: 0 5px 18px rgba(255, 71, 87, 0.35);
+        }
         
+        /* ===== حاويات العرض والبطاقات الفرعية الزجاجية ===== */
         .qr-box {
             display: flex;
             justify-content: center;
-            margin: 15px 0;
-            padding: 10px;
-            background: #fff;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin: 10px 0;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.88);
+            border-radius: 22px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
         .info-card {
-            background: #ecf0f1;
-            padding: 20px;
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--glass-border);
+            padding: 24px;
+            border-radius: 20px;
             text-align: right;
-            border-right: 5px solid #3498db;
+            border-right: 6px solid var(--orange-bright);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
         .info-card p {
-            font-size: 18px;
-            margin: 8px 0;
+            font-size: 17px;
+            margin: 12px 0;
             word-break: break-all;
+            color: #ffffff;
         }
-        .info-card span {
+        .info-card span.label-tag {
             font-weight: bold;
-            color: #2c3e50;
+            color: var(--turquoise-bright);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .info-card span.value-tag {
+            font-weight: bold;
+            color: #ffffff;
         }
         .note {
-            color: #e74c3c;
+            color: #fff1f2;
             font-size: 15px;
-            background: #fde8e8;
-            padding: 12px;
-            border-radius: 8px;
+            background: rgba(239, 68, 68, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 14px;
+            border-radius: 12px;
             font-weight: bold;
         }
         .footer-actions {
             display: flex;
-            gap: 10px;
+            gap: 14px;
             flex-wrap: wrap;
         }
         .footer-actions .btn {
             flex: 1;
-            min-width: 120px;
-        }
-        /* ===== تذييل الحقوق ===== */
-        .footer-copyright {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px solid #ecf0f1;
-            text-align: center;
-            color: #95a5a6;
-            font-size: 14px;
-        }
-        .footer-copyright strong {
-            color: #2c3e50;
-            font-size: 15px;
-        }
-        .footer-copyright .heart {
-            color: #e74c3c;
+            min-width: 130px;
         }
 
-        /* ===== صفحة الزبون المتجاوبة والمحدثة ===== */
-        #page-client {
-            user-select: none;
-        }
-        .client-wrapper {
-            background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
-            border: 2px solid #3498db;
-            border-radius: 20px;
-            padding: 35px 25px;
-            box-shadow: 0 15px 35px rgba(52, 152, 219, 0.15);
-            text-align: center;
-            width: 100%;
-        }
-        .client-welcome-title {
-            color: #2c3e50;
-            font-size: 24px;
-            margin: 15px 0 5px 0;
-        }
-        .client-subtitle {
-            color: #7f8c8d;
-            font-size: 15px;
-            margin-bottom: 25px;
-        }
-        .credentials-card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
-        }
-        .credential-group {
-            margin-bottom: 20px;
-            text-align: right;
-        }
-        .credential-group:last-child {
-            margin-bottom: 0;
-        }
-        .credential-group label {
-            display: block;
-            color: #34495e;
-            font-size: 15px;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-        /* تعديل تصميم الصندوق ليكون الزر بالأسفل */
-        .input-with-copy {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid #e9ecef;
-        }
-        .input-with-copy span {
-            font-family: monospace;
-            font-size: 18px;
-            color: #2c3e50;
-            font-weight: bold;
-            word-break: break-all;
-            text-align: center;
-            direction: ltr;
-            display: block;
-            padding: 4px 0;
-        }
-        .copy-btn {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 15px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-        }
-        .copy-btn:hover {
-            background: #2980b9;
-        }
-        .copy-btn.copied {
-            background: #2ecc71 !important;
-        }
-        .client-warning {
-            color: #e74c3c;
-            font-size: 14px;
-            font-weight: bold;
-            background: #fde8e8;
-            padding: 14px;
-            border-radius: 10px;
-            line-height: 1.5;
-        }
-
-        /* ===== السجلات وقاعدة البيانات ===== */
+        /* ===== أرشيف وإحصائيات سجلات النظام ===== */
         .db-stats {
-            background: #e8f4fd;
-            padding: 12px;
-            border-radius: 10px;
-            margin: 10px 0;
-            font-size: 15px;
-            color: #2c3e50;
+            background: rgba(0, 242, 254, 0.18);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            padding: 14px;
+            border-radius: 14px;
+            margin: 5px 0 12px 0;
+            font-size: 16px;
+            color: #ffffff;
             font-weight: bold;
-            border: 1px solid #c5e0f5;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        .search-box-container {
+            margin: 5px 0 15px 0;
+        }
+        .search-input {
+            border: 2px solid var(--turquoise-bright) !important;
+            background: rgba(255, 255, 255, 0.22) !important;
         }
         .records-list {
-            max-height: 350px;
+            max-height: 380px;
             overflow-y: auto;
             text-align: left;
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 15px;
-            border: 1px solid #eee;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 18px;
+            padding: 16px;
+            border: 1px solid var(--glass-border);
         }
         .record-item {
-            background: white;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 10px;
-            border-right: 5px solid #3498db;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid var(--glass-border);
+            padding: 18px;
+            margin: 12px 0;
+            border-radius: 14px;
+            border-right: 5px solid var(--turquoise-bright);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
         }
+        .record-item:first-child { margin-top: 0; }
         .record-item .record-data {
             font-size: 15px;
             line-height: 1.6;
+            color: #ffffff;
             flex: 1;
-            min-width: 200px;
+            min-width: 210px;
             word-break: break-all;
-        }
-        .record-item .record-data strong {
-            color: #2c3e50;
         }
         .record-item .record-date {
             font-size: 12px;
-            color: #95a5a6;
-            margin-bottom: 8px;
-            display: block;
+            color: #ffffff;
+            font-weight: bold;
+            background: rgba(0, 139, 148, 0.6);
+            padding: 5px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
         .btn-small {
-            padding: 8px 15px;
+            padding: 9px 16px;
             font-size: 13px;
             font-weight: bold;
-            border-radius: 8px;
+            border-radius: 10px;
             border: none;
             cursor: pointer;
-            background: #e74c3c;
+            background: linear-gradient(135deg, #ff4757, #ff6b6b);
             color: white;
+            box-shadow: 0 3px 10px rgba(255, 71, 87, 0.35);
+            transition: 0.2s;
         }
-        .btn-small:hover { background: #c0392b; }
+        .btn-small:hover { transform: scale(1.04); filter: brightness(1.1); }
         .empty-msg {
-            color: #95a5a6;
-            padding: 20px;
+            color: #cbd5e1;
+            padding: 25px;
             font-style: italic;
             text-align: center;
             font-weight: bold;
         }
         .actions-row {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
             justify-content: center;
             width: 100%;
         }
         .actions-row .btn {
             flex: 1;
-            min-width: 140px;
+            min-width: 145px;
             font-size: 15px;
-            padding: 12px;
+            padding: 13px;
         }
 
-        /* ===== صورة QR للتصدير ===== */
+        /* ===== تصميم واجهة الزبون الزجاجية الفخمة والمغلقة ===== */
+        .client-wrapper {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--turquoise-bright);
+            border-radius: 26px;
+            padding: 35px 25px;
+            box-shadow: 0 20px 45px rgba(0, 242, 254, 0.18), inset 0 1px 4px rgba(255, 255, 255, 0.3);
+            text-align: center;
+            width: 100%;
+        }
+        .client-welcome-title {
+            color: #ffffff;
+            font-size: 28px;
+            margin: 18px 0 6px 0;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .client-welcome-title span {
+            color: var(--orange-bright);
+            font-weight: bold;
+            text-shadow: 0 0 12px rgba(255, 122, 0, 0.5);
+        }
+        .client-subtitle {
+            color: #f1f5f9;
+            font-size: 15px;
+            margin-bottom: 28px;
+        }
+        .credentials-card {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            margin-bottom: 28px;
+        }
+        .credential-group {
+            margin-bottom: 22px;
+            text-align: right;
+        }
+        .credential-group:last-child { margin-bottom: 0; }
+        .credential-group label {
+            display: block;
+            color: var(--turquoise-bright);
+            font-size: 15px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .input-with-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+        }
+        .input-with-copy span {
+            font-family: monospace;
+            font-size: 20px;
+            color: #ffffff;
+            font-weight: bold;
+            word-break: break-all;
+            text-align: center;
+            direction: ltr;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+        .copy-btn {
+            background: linear-gradient(135deg, var(--orange-bright), #e66e00);
+            color: white;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 14px rgba(255, 122, 0, 0.35);
+        }
+        .copy-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 7px 18px rgba(255, 122, 0, 0.55);
+        }
+        .copy-btn.copied {
+            background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.45);
+        }
+        .client-warning {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            background: rgba(231, 76, 60, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 14px;
+            line-height: 1.6;
+            box-shadow: 0 5px 18px rgba(231, 76, 60, 0.25);
+        }
+
+        /* ===== تذييل الحقوق السفلي المصمم بدقة ===== */
+        .footer-copyright {
+            margin-top: 35px;
+            padding-top: 22px;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+            color: #cbd5e1;
+            font-size: 14px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        .footer-copyright strong {
+            color: var(--turquoise-bright);
+        }
+        .footer-copyright .heart {
+            color: var(--orange-bright);
+            animation: pulse 1.5s infinite;
+            display: inline-block;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.25); }
+            100% { transform: scale(1); }
+        }
+
+        /* ===== تصميم وتأصيل كرت الصورة المخصص للتصدير الفاخر والآمن للعميل ===== */
         #qr-export-container {
             position: absolute;
             left: -9999px;
             top: 0;
-            width: 420px;
-            background: white;
-            padding: 30px;
+            width: 480px;
+            background: linear-gradient(135deg, #012b30 0%, #090d0f 100%);
+            padding: 40px 35px;
             text-align: center;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 26px;
+            border: 2px solid #00f2fe;
             direction: rtl;
         }
         #qr-export-container .export-logo {
-            max-width: 100px;
+            max-width: 110px;
             height: auto;
-            margin-bottom: 10px;
-            border-radius: 10px;
+            margin-bottom: 14px;
+            border-radius: 18px;
+            border: 1px solid rgba(0, 242, 254, 0.35);
         }
         #qr-export-container .export-title {
-            font-size: 20px;
+            font-size: 26px;
             font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 15px;
+            color: #ffffff;
+            margin-bottom: 16px;
         }
         #qr-export-container .export-title span {
-            color: #3498db;
+            color: #00f2fe;
+            text-shadow: 0 0 12px rgba(0, 242, 254, 0.6);
         }
         #qr-export-container .export-qr {
             display: flex;
             justify-content: center;
-            margin: 15px 0;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 10px;
+            margin: 22px 0;
+            padding: 18px;
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.25);
         }
         #qr-export-container .export-info {
-            background: #ecf0f1;
-            padding: 15px;
-            border-radius: 12px;
-            margin: 15px 0;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            padding: 22px;
+            border-radius: 18px;
+            margin: 16px 0;
             text-align: right;
-            border-right: 4px solid #3498db;
+            border-right: 6px solid #ff7a00;
         }
         #qr-export-container .export-info p {
             font-size: 16px;
-            margin: 6px 0;
+            margin: 10px 0;
+            color: #e2e8f0;
             word-break: break-all;
         }
-        #qr-export-container .export-info span {
+        #qr-export-container .export-info span.lbl {
             font-weight: bold;
-            color: #2c3e50;
+            color: #00f2fe;
         }
         #qr-export-container .export-footer {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid #ecf0f1;
+            margin-top: 22px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
             font-size: 13px;
-            color: #95a5a6;
-        }
-        #qr-export-container .export-footer strong {
-            color: #2c3e50;
-            font-size: 14px;
+            color: #94a3b8;
         }
 
-        /* ==========================================
-           قواعد التجاوب الكامل مع كل الشاشات (Responsive)
-           ========================================== */
+        /* ===== استعلامات شاشات الموبايل المتجاوبة للتصميم بالكامل ===== */
         @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            .container {
-                padding: 25px 15px;
-                border-radius: 15px;
-            }
-            .brand-title {
-                font-size: 20px;
-            }
-            .subtitle {
-                font-size: 13px;
-                margin-bottom: 15px;
-            }
-            h1 {
-                font-size: 22px;
-            }
-            .client-wrapper {
-                padding: 25px 15px;
-            }
-            .client-welcome-title {
-                font-size: 20px;
-            }
-            .input-with-copy span {
-                font-size: 16px;
-            }
-            .info-card p {
-                font-size: 15px;
-            }
-            .footer-actions {
-                flex-direction: column;
-            }
-            .footer-actions .btn {
-                width: 100%;
-            }
-            .actions-row {
-                flex-direction: column;
-            }
-            .actions-row .btn {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .input-with-copy span {
-                font-size: 14px;
-            }
-            .client-welcome-title {
-                font-size: 18px;
-            }
+            body { padding: 10px; }
+            .container { padding: 30px 18px; border-radius: 22px; }
+            .brand-title { font-size: 24px; }
+            .subtitle { font-size: 13px; margin-bottom: 18px; }
+            .client-wrapper { padding: 25px 16px; }
+            .input-with-copy span { font-size: 16px; }
+            .info-card { padding: 18px; }
+            .info-card p { font-size: 15px; }
+            .footer-actions { flex-direction: column; gap: 10px; }
+            .footer-actions .btn { width: 100%; }
+            .actions-row { flex-direction: column; gap: 10px; }
+            .actions-row .btn { width: 100%; }
         }
     </style>
 </head>
 <body>
 
+<!-- الكرات السائلة الخلفية للثيم المتطور -->
+<div class="liquid-blob blob-1"></div>
+<div class="liquid-blob blob-2"></div>
+
 <div class="container" id="app">
-    <!-- ===== شعار البيت الرقمي المباشر ===== -->
+    <!-- شعار البيت الرقمي التلقائي المخفي عند عدم الوجود -->
     <div class="logo-container">
         <img src="a.jpg" alt="البيت الرقمي" onerror="this.style.display='none'">
     </div>
 
-    <!-- ===== عنوان البيت الرقمي ===== -->
+    <!-- عنوان براند متجر الأدمن الرئيسي الخاص بك -->
     <div class="brand-title">🏠 <span>البيت الرقمي</span></div>
     <p class="subtitle">نظام الإدارة الحصري لـ "البيت الرقمي"</p>
 
-    <!-- ========== الصفحة 1: الرئيسية ========== -->
+    <!-- ==================== الصفحة 1: الرئيسية الإدارية ==================== -->
     <div class="page active" id="page-home">
-        <h1>📱 مولد بيانات العملاء</h1>
-        <p class="subtitle">البيت الرقمي - أنشئ كوداً لعرض بيانات الدخول بأمان</p>
+        <h1>📱 مولد بيانات العملاء الذكي</h1>
+        <p class="subtitle">البيت الرقمي - أنشئ كوداً مشفراً لعرض معلومات حسابات الزبائن بأمان تام</p>
         
         <div class="db-stats">
-            📊 إجمالي سجلات البيت الرقمي: <span id="recordCount">0</span>
+            📊 إجمالي سجلات نظام البيت الرقمي: <span id="recordCount">0</span> سجل
         </div>
         
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-            <button class="btn" onclick="goToData()">➕ توليد QR جديد لعميل</button>
-            <button class="btn btn-success" onclick="showRecords()">📋 إدارة سجلات البيت الرقمي</button>
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <button class="btn btn-success" onclick="goToData()">➕ توليد QR كود جديد لزبون</button>
+            <button class="btn btn-orange" onclick="showRecords()">📋 إدارة وأرشيف سجلات المتجر</button>
             <div class="actions-row">
-                <button class="btn btn-warning" onclick="exportDatabase()">⬇️ تصدير قاعدة البيانات</button>
-                <button class="btn btn-danger" onclick="clearDatabase()">🗑️ مسح جميع السجلات</button>
+                <button class="btn" style="background: linear-gradient(135deg, #2d3748, #1a202c);" onclick="exportDatabase()">⬇️ تحميل نسخة احتياطية (JSON)</button>
+                <button class="btn btn-danger" onclick="clearDatabase()">🗑️ مسح وقائع الأرشيف نهائياً</button>
             </div>
         </div>
     </div>
 
-    <!-- ========== الصفحة 2: إدخال البيانات ========== -->
+    <!-- ==================== الصفحة 2: إدخال البيانات للزبون ==================== -->
     <div class="page" id="page-data">
-        <h1>✏️ بيانات عميل البيت الرقمي</h1>
-        <p class="subtitle">يرجى إدخال البيانات لإصدار الكود السري</p>
-        <input type="email" id="emailInput" placeholder="البريد الإلكتروني للعميل">
-        <input type="text" id="passInput" placeholder="كلمة المرور">
-        <textarea id="notesInput" placeholder="ملاحظات إضافية (ستظهر للعميل وعلى الصورة أيضاً)"></textarea>
-        <button class="btn btn-success" onclick="generateQR()">🚀 توليد وحفظ في قاعدة البيت الرقمي</button>
-        <button class="btn" style="background:#95a5a6;" onclick="goHome()">↩️ العودة للرئيسية</button>
+        <h1>✏️ بيانات حساب العميل الجديد</h1>
+        <p class="subtitle">يرجى تعبئة الحقول الأساسية لتوليد رابط التشفير للزبون</p>
+        <input type="text" id="nameInput" placeholder="اسم الزبون الكامـل">
+        <input type="email" id="emailInput" placeholder="البريد الإلكتروني للـحساب">
+        <input type="text" id="passInput" placeholder="كلمة المرور الآمنة">
+        <textarea id="notesInput" placeholder="ملاحظات وتفاصيل إضافية (ستظهر للزبون بشكل كامل وعلى الكرت أيضاً)"></textarea>
+        <button class="btn btn-success" onclick="generateQR()">🚀 إصدار الكود والحفظ في النظام</button>
+        <button class="btn" style="background:#4b5563;" onclick="goHome()">↩️ إلغاء والعودة للرئيسية</button>
     </div>
 
-    <!-- ========== الصفحة 3: عرض النتيجة ========== -->
+    <!-- ==================== الصفحة 3: عرض كود النتيجة المولد ==================== -->
     <div class="page" id="page-result">
-        <h1>✅ تم الإصدار بنجاح!</h1>
-        <p class="subtitle">تم إنشاء كود حصري من نظام البيت الرقمي</p>
+        <h1>✅ تم الحفظ والتوليد بنجاح!</h1>
+        <p class="subtitle">تم ترحيل البيانات للأرشيف وإنشاء كود الدخول الخاص بمتجرنا</p>
         <div class="qr-box" id="qrcode-container"></div>
         <div class="info-card">
-            <p><span>📧 الإيميل:</span> <span id="displayEmail">---</span></p>
-            <p><span>🔑 الباسورد:</span> <span id="displayPass">---</span></p>
-            <p><span>📝 الملاحظات:</span> <span id="displayNotes">---</span></p>
+            <p><span class="label-tag">👤 اسم الزبون:</span> <span class="value-tag" id="displayName">---</span></p>
+            <p><span class="label-tag">📧 الإيميل المربوط:</span> <span class="value-tag" id="displayEmail">---</span></p>
+            <p><span class="label-tag">🔑 كلمة المرور:</span> <span class="value-tag" id="displayPass">---</span></p>
+            <p><span class="label-tag">📅 تاريخ وساعة الإصدار:</span> <span id="displayDate" style="font-weight:bold; color:var(--orange-bright);">---</span></p>
+            <p><span class="label-tag">📝 الملاحظات المدونة:</span> <span class="value-tag" id="displayNotes">---</span></p>
         </div>
         <div class="footer-actions">
-            <button class="btn btn-purple" onclick="exportAsImage()">🖼️ تصدير كصورة للعميل</button>
-            <button class="btn" style="background:#e67e22;" onclick="goHome()">🏠 الرئيسية</button>
+            <button class="btn btn-orange" onclick="exportAsImage()">🖼️ تصدير الكرت كصورة للعميل</button>
+            <button class="btn" style="background: linear-gradient(135deg, #4b5563, #374151);" onclick="goHome()">🏠 العودة للرئيسية</button>
         </div>
-        <p class="note">📌 تم أرشفة البيانات بأمان في قاعدة بيانات <strong>البيت الرقمي</strong></p>
+        <p class="note">📌 تنبيه: تم تشفير وحفظ هذه البيانات في ذاكرة المتصفح المحلية (IndexedDB) للبيت الرقمي بنجاح.</p>
     </div>
 
-    <!-- ========== الصفحة 4: عرض السجلات ========== -->
+    <!-- ==================== الصفحة 4: أرشيف السجلات والبحث الحي ==================== -->
     <div class="page" id="page-records">
-        <h1>📋 أرشيف البيت الرقمي</h1>
-        <p class="subtitle">السجلات المحفوظة في النظام</p>
+        <h1>📋 أرشيف سجلات البيت الرقمي</h1>
+        <p class="subtitle">استعراض وتصفية كافة الحسابات المنسقة والمسجلة مسبقاً</p>
+        
         <div class="db-stats">
-            📊 السجلات المتاحة: <span id="totalRecords">0</span>
+            📊 إجمالي الكروت المخزنة: <span id="totalRecords">0</span> كرت مفعل
         </div>
+        
+        <!-- شريط التصفية والبحث الفوري المطور -->
+        <div class="search-box-container">
+            <input type="text" id="searchInput" class="search-input" oninput="filterRecords()" placeholder="🔍 ابحث فوراً باسم الزبون، الإيميل، الباسورد، أو الملاحظة...">
+        </div>
+
         <div class="records-list" id="recordsList">
-            <div class="empty-msg">لا توجد سجلات حالياً في نظام البيت الرقمي</div>
+            <div class="empty-msg">أرشيف البيت الرقمي فارغ تماماً حالياً</div>
         </div>
+        
         <div class="actions-row">
-            <button class="btn btn-warning" onclick="exportDatabase()">⬇️ تحميل نسخة احتياطية</button>
-            <button class="btn" style="background:#95a5a6;" onclick="goHome()">↩️ رجوع للرئيسية</button>
+            <button class="btn btn-success" onclick="exportDatabase()">⬇️ تصدير نسخة البيانات الاحتياطية</button>
+            <button class="btn" style="background:#4b5563;" onclick="goHome()">↩️ رجوع للرئيسية</button>
         </div>
     </div>
 
-    <!-- ========== الصفحة 5: صفحة الزبون (المحدثة والمحسنة كلياً للموبايل) ========== -->
+    <!-- ==================== الصفحة 5: واجهة الزبون الزجاجية الحصرية الفاخرة ==================== -->
     <div class="page" id="page-client">
         <div class="client-wrapper">
-            <div class="brand-title" style="font-size: 26px;">🏠 <span>البيت الرقمي</span></div>
-            <h1 class="client-welcome-title">👋 مرحباً بك عميلنا العزيز</h1>
-            <p class="client-subtitle">لقد تم تجهيز بيانات الدخول الخاصة بك من قبل <strong>البيت الرقمي</strong></p>
+            <div class="brand-title" style="font-size: 28px;">🏠 <span>البيت الرقمي</span></div>
+            <h1 class="client-welcome-title">👋 مرحباً بك <span id="clientName">الزبون</span></h1>
+            <p class="client-subtitle">لقد قام قسم الدعم الفني في <strong>البيت الرقمي</strong> بتجهيز بيانات حسابك بأمان:</p>
             
             <div class="credentials-card">
-                <!-- مجموعة الإيميل المحدثة -->
                 <div class="credential-group">
-                    <label>البريد الإلكتروني:</label>
+                    <label>البريد الإلكتروني لحسابك:</label>
                     <div class="input-with-copy">
                         <span id="clientEmail">---</span>
-                        <button class="copy-btn" onclick="copyData('clientEmail', this)">
-                            📋 نسخ البريد الإلكتروني
-                        </button>
+                        <button class="copy-btn" onclick="copyData('clientEmail', this)">📋 نسخ البريد الإلكتروني</button>
                     </div>
                 </div>
                 
-                <!-- مجموعة الباسورد المحدثة -->
                 <div class="credential-group">
-                    <label>كلمة المرور الآمنة:</label>
+                    <label>كلمة المرور الآمنة (Password):</label>
                     <div class="input-with-copy">
                         <span id="clientPass">---</span>
-                        <button class="copy-btn" onclick="copyData('clientPass', this)">
-                            📋 نسخ كلمة المرور
-                        </button>
+                        <button class="copy-btn" onclick="copyData('clientPass', this)">📋 نسخ كلمة المرور</button>
                     </div>
                 </div>
             </div>
             
-            <p class="client-warning">⚠️ تنبيه من البيت الرقمي: هذه المعلومات سرية جداً، يرجى عدم مشاركتها مع أي شخص آخر للحفاظ على خصوصيتك.</p>
+            <p class="client-warning">⚠️ تنبيه خصوصية: هذه المعلومات مشفرة وسرية للغاية، يرجى عدم إطلاع أي طرف ثالث عليها لضمان سلامة حسابك.</p>
             
             <div class="footer-copyright" style="border-top: none; margin-top: 25px;">
-                © 2026 تم التصميم والحفظ بواسطة <strong>البيت الرقمي</strong> 
-                <br><span class="heart">❤️</span> جميع الحقوق محفوظة
+                © 2026 تم الفحص والحفظ بواسطة مهندسي <strong>البيت الرقمي</strong> 
+                <br><span class="heart">❤️</span> جميع الحقوق محفوظة لمتجرنا
             </div>
         </div>
     </div>
 
-    <!-- ===== تذييل الحقوق (للصفحات الإدارية) ===== -->
+    <!-- تذييل حقوق الأدمن الرئيسي للنظام -->
     <div class="footer-copyright" id="admin-footer">
-        © 2026 برمجة وتطوير <strong>البيت الرقمي</strong> 
-        <span class="heart">❤️</span> جميع الحقوق محفوظة
+        © 2026 برمجة وإدارة <strong>البيت الرقمي</strong> 
+        <span class="heart">❤️</span> كافة الحقوق محفوظة
     </div>
 </div>
 
-<!-- ===== حاوية التصدير كصورة ===== -->
+<!-- ==================== حاوية كرت التصدير الاحترافي المخفية للعميل ==================== -->
 <div id="qr-export-container">
     <img src="a.jpg" alt="البيت الرقمي" class="export-logo" onerror="this.style.display='none'">
     <div class="export-title">🏠 <span>البيت الرقمي</span></div>
-    <div style="font-size: 15px; color: #7f8c8d; margin-bottom: 10px;">بيانات دخول حصرية للعميل</div>
+    <div style="font-size: 15px; color: #94a3b8; margin-bottom: 12px; font-weight: bold;">وثيقة تسليم بيانات دخول الحساب الرسمية</div>
     <div class="export-qr" id="export-qr-code"></div>
     <div class="export-info">
-        <p><span>📧 الإيميل:</span> <span id="exportEmail">---</span></p>
-        <p><span>🔑 الباسورد:</span> <span id="exportPass">---</span></p>
-        <p><span>📝 الملاحظات:</span> <span id="exportNotes">---</span></p>
+        <p><span class="lbl">👤 اسم الزبون الكامل:</span> <span id="exportName">---</span></p>
+        <p><span class="lbl">📧 البريد الإلكتروني:</span> <span id="exportEmail">---</span></p>
+        <p><span class="lbl">🔑 كلمة المرور الآمنة:</span> <span id="exportPass">---</span></p>
+        <p><span class="lbl">📅 التاريخ والتوقيت الموثق:</span> <span id="exportDate" style="color: #ff7a00; font-weight: bold;">---</span></p>
+        <p><span class="lbl">📝 ملاحظات التفعيل:</span> <span id="exportNotes">---</span></p>
     </div>
     <div class="export-footer">
-        © 2026 <strong>البيت الرقمي</strong> ❤️ جميع الحقوق محفوظة
+        شكرًا لثقتكم بـ <strong>البيت الرقمي</strong> ❤️ خياركم الأول للخدمات الرقمية
     </div>
 </div>
 
 <script>
     // ==========================================
-    // دالة النسخ لصفحة الزبون
+    // تهيئة وتنسيق الوقت والتاريخ العراقي (12 ساعة ص/م) بالتفصيل الكامل
+    // ==========================================
+    function formatArabicDateTime(dateString) {
+        if (!dateString) return '---';
+        const date = new Date(dateString);
+        
+        const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+        const dayName = days[date.getDay()];
+        
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        
+        let hours = date.getHours();
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'مساءً' : 'صباحاً';
+        
+        hours = hours % 12;
+        hours = hours ? hours : 12; 
+        
+        return `${dayName}، ${year}/${month}/${day} - ${hours}:${minutes} ${ampm}`;
+    }
+
+    // ==========================================
+    // محرك التصفية والبحث المباشر الفوري (Live Search Filter)
+    // ==========================================
+    function filterRecords() {
+        const query = document.getElementById('searchInput').value.toLowerCase().trim();
+        const items = document.querySelectorAll('.record-item');
+        
+        items.forEach(item => {
+            const dataText = item.querySelector('.record-data').innerText.toLowerCase();
+            if (dataText.includes(query)) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    // ==========================================
+    // دالة نسخ البيانات إلى الحافظة مع إشعار تفاعلي
     // ==========================================
     function copyData(elementId, btnElement) {
         const textToCopy = document.getElementById(elementId).innerText;
-        
         navigator.clipboard.writeText(textToCopy).then(() => {
             const originalHTML = btnElement.innerHTML;
-            btnElement.innerHTML = '✅ تم نسخ البيانات بنجاح';
+            btnElement.innerHTML = '✅ تم نسخ البيانات للحافظة';
             btnElement.classList.add('copied');
-            
             setTimeout(() => {
                 btnElement.innerHTML = originalHTML;
                 btnElement.classList.remove('copied');
             }, 2000);
         }).catch(err => {
-            alert('نظام البيت الرقمي: عذراً، فشلت عملية النسخ!');
+            alert('نظام البيت الرقمي: تعذر نسخ النص تلقائياً!');
         });
     }
 
     // ==========================================
-    // 1. قاعدة البيانات (IndexedDB)
+    // محرك معالجة قاعدة البيانات المحلية (IndexedDB) للبيت الرقمي
     // ==========================================
-    const DB_NAME = 'DigitalHome_QR_Database';
+    const DB_NAME = 'DigitalHome_LiquidQR_DB';
     const DB_VERSION = 1;
     const STORE_NAME = 'qr_records';
-
     let db = null;
 
     function openDatabase() {
         return new Promise((resolve, reject) => {
             const request = indexedDB.open(DB_NAME, DB_VERSION);
-            
             request.onerror = () => reject(request.error);
-            request.onsuccess = () => {
-                db = request.result;
-                resolve(db);
-            };
-            
+            request.onsuccess = () => { db = request.result; resolve(db); };
             request.onupgradeneeded = (event) => {
                 const db = event.target.result;
                 if (!db.objectStoreNames.contains(STORE_NAME)) {
-                    const store = db.createObjectStore(STORE_NAME, { 
-                        keyPath: 'id', 
-                        autoIncrement: true 
-                    });
+                    const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                    store.createIndex('name', 'name', { unique: false });
                     store.createIndex('email', 'email', { unique: false });
                     store.createIndex('date', 'date', { unique: false });
                 }
@@ -663,26 +785,21 @@
         });
     }
 
-    // ==========================================
-    // 2. عمليات قاعدة البيانات
-    // ==========================================
-    function addRecord(email, password, notes = '') {
+    function addRecord(name, email, password, notes = '') {
         return new Promise((resolve, reject) => {
-            if (!db) {
-                reject('قاعدة بيانات البيت الرقمي غير متصلة');
-                return;
-            }
-            
+            if (!db) return reject('قاعدة بيانات البيت الرقمي غير متصلة');
             const transaction = db.transaction([STORE_NAME], 'readwrite');
             const store = transaction.objectStore(STORE_NAME);
             
             const record = {
+                name: name,
                 email: email,
                 password: password,
                 notes: notes,
                 date: new Date().toISOString(),
                 qr_url: window.location.href.split('?')[0] + 
-                        '?mode=client&email=' + encodeURIComponent(email) + 
+                        '?mode=client&name=' + encodeURIComponent(name) + 
+                        '&email=' + encodeURIComponent(email) + 
                         '&pass=' + encodeURIComponent(password)
             };
             
@@ -694,15 +811,10 @@
 
     function getAllRecords() {
         return new Promise((resolve, reject) => {
-            if (!db) {
-                reject('قاعدة بيانات البيت الرقمي غير متصلة');
-                return;
-            }
-            
+            if (!db) return reject('قاعدة بيانات البيت الرقمي غير متصلة');
             const transaction = db.transaction([STORE_NAME], 'readonly');
             const store = transaction.objectStore(STORE_NAME);
             const request = store.getAll();
-            
             request.onsuccess = () => resolve(request.result);
             request.onerror = () => reject(request.error);
         });
@@ -710,15 +822,10 @@
 
     function deleteRecord(id) {
         return new Promise((resolve, reject) => {
-            if (!db) {
-                reject('قاعدة بيانات البيت الرقمي غير متصلة');
-                return;
-            }
-            
+            if (!db) return reject('قاعدة بيانات البيت الرقمي غير متصلة');
             const transaction = db.transaction([STORE_NAME], 'readwrite');
             const store = transaction.objectStore(STORE_NAME);
             const request = store.delete(id);
-            
             request.onsuccess = () => resolve();
             request.onerror = () => reject(request.error);
         });
@@ -726,304 +833,258 @@
 
     function clearAllRecords() {
         return new Promise((resolve, reject) => {
-            if (!db) {
-                reject('قاعدة بيانات البيت الرقمي غير متصلة');
-                return;
-            }
-            
+            if (!db) return reject('قاعدة بيانات البيت الرقمي غير متصلة');
             const transaction = db.transaction([STORE_NAME], 'readwrite');
             const store = transaction.objectStore(STORE_NAME);
             const request = store.clear();
-            
             request.onsuccess = () => resolve();
             request.onerror = () => reject(request.error);
         });
     }
 
-    // ==========================================
-    // 3. تصدير قاعدة البيانات
-    // ==========================================
     async function exportDatabase() {
         try {
             const records = await getAllRecords();
-            if (records.length === 0) {
-                alert('نظام البيت الرقمي: لا توجد سجلات حالياً لتصديرها!');
-                return;
+            if (records.length === 0) { 
+                return alert('نظام البيت الرقمي: الأرشيف فارغ تماماً، لا توجد سجلات لتصديرها حالياً.'); 
             }
-            
             const dataStr = JSON.stringify(records, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
-            
             const link = document.createElement('a');
             link.href = url;
-            link.download = `قاعدة_بيانات_البيت_الرقمي_${new Date().toISOString().slice(0,10)}.json`;
+            link.download = `نسخة_احتياطية_البيت_الرقمي_${new Date().toISOString().slice(0,10)}.json`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
-            
-            alert(`✅ نظام البيت الرقمي: تم تصدير ${records.length} سجل بنجاح!`);
-        } catch (error) {
-            alert('نظام البيت الرقمي - خطأ في التصدير: ' + error);
+            alert(`✅ نظام البيت الرقمي: تم تصدير عدد (${records.length}) سجل بنجاح كامل!`);
+        } catch (error) { 
+            alert('نظام البيت الرقمي - خطأ في تصدير البيانات: ' + error); 
         }
     }
 
-    // ==========================================
-    // 4. مسح قاعدة البيانات
-    // ==========================================
     async function clearDatabase() {
-        if (!confirm('⚠️ تحذير من البيت الرقمي: هل أنت متأكد من مسح جميع السجلات نهائياً؟')) {
-            return;
-        }
-        
+        if (!confirm('⚠️ تحذير صارم من نظام البيت الرقمي: هل أنت متأكد من حذف وإفراغ جميع السجلات نهائياً وبدون رجعة؟')) return;
         try {
             await clearAllRecords();
-            alert('✅ نظام البيت الرقمي: تم مسح جميع السجلات بنجاح!');
+            alert('✅ نظام البيت الرقمي: تم تصفير ومسح قاعدة البيانات بأكملها بنجاح!');
             updateStats();
             showRecords();
-        } catch (error) {
-            alert('نظام البيت الرقمي - خطأ في المسح: ' + error);
+        } catch (error) { 
+            alert('نظام البيت الرقمي - خطأ في عملية التطهير: ' + error); 
         }
     }
 
-    // ==========================================
-    // 5. عرض السجلات
-    // ==========================================
     async function showRecords() {
         try {
             const records = await getAllRecords();
             const container = document.getElementById('recordsList');
-            const totalSpan = document.getElementById('totalRecords');
-            
-            totalSpan.textContent = records.length;
-            
+            document.getElementById('totalRecords').textContent = records.length;
+            document.getElementById('searchInput').value = '';
+
             if (records.length === 0) {
-                container.innerHTML = '<div class="empty-msg">📭 أرشيف البيت الرقمي فارغ حالياً</div>';
+                container.innerHTML = '<div class="empty-msg">📭 أرشيف البيت الرقمي فارغ حالياً ولا يحتوي سجلات</div>';
             } else {
                 container.innerHTML = records.map(record => `
                     <div class="record-item">
                         <div class="record-data">
-                            <strong>📧:</strong> ${record.email}<br>
-                            <strong>🔑:</strong> ${record.password}<br>
-                            ${record.notes ? `<strong>📝 ملاحظة البيت الرقمي:</strong> ${record.notes}<br>` : ''}
+                            <strong>👤 العميل:</strong> ${record.name || 'غير مسجل'}<br>
+                            <strong>📧 الإيميل:</strong> ${record.email}<br>
+                            <strong>🔑 الرمز:</strong> ${record.password}<br>
+                            ${record.notes ? `<strong>📝 ملاحظات:</strong> ${record.notes}<br>` : ''}
                         </div>
-                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
-                            <span class="record-date">📅 ${new Date(record.date).toLocaleString('ar-EG')}</span>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+                            <span class="record-date">📅 ${formatArabicDateTime(record.date)}</span>
                             <button class="btn-small" onclick="deleteRecordById(${record.id})">🗑️ حذف</button>
                         </div>
                     </div>
                 `).join('');
             }
-            
             showPage('page-records');
-        } catch (error) {
-            alert('نظام البيت الرقمي - خطأ في عرض السجلات: ' + error);
+        } catch (error) { 
+            alert('نظام البيت الرقمي - تعذر جلب وعرض الأرشيف: ' + error); 
         }
     }
 
     async function deleteRecordById(id) {
-        if (!confirm('نظام البيت الرقمي: هل أنت متأكد من حذف هذا السجل؟')) return;
-        
+        if (!confirm('نظام البيت الرقمي: هل تود حذف هذا الكرت الفردي من الأرشيف بشكل نهائي؟')) return;
         try {
             await deleteRecord(id);
-            alert('✅ نظام البيت الرقمي: تم الحذف بنجاح!');
+            alert('✅ نظام البيت الرقمي: تم إقصاء السجل المحدد بنجاح.');
             showRecords();
             updateStats();
-        } catch (error) {
-            alert('نظام البيت الرقمي - خطأ في الحذف: ' + error);
+        } catch (error) { 
+            alert('نظام البيت الرقمي - تعذر الحذف: ' + error); 
         }
     }
 
-    // ==========================================
-    // 6. تحديث الإحصائيات
-    // ==========================================
     async function updateStats() {
         try {
             const records = await getAllRecords();
             document.getElementById('recordCount').textContent = records.length;
-        } catch (error) {
-            console.error('نظام البيت الرقمي - خطأ:', error);
+        } catch (error) { 
+            console.error('نظام البيت الرقمي - فشل تحديث العداد:', error); 
         }
     }
 
-    // ==========================================
-    // 7. وظائف التطبيق
-    // ==========================================
-    let qrCodeInstance = null;
-    let currentEmail = '';
-    let currentPass = '';
-    let currentNotes = '';
-    let exportQrInstance = null;
+    // متغيرات الجلسة المؤقتة لمعالجات الصور والتخزين الفوري
+    let currentName = '', currentEmail = '', currentPass = '', currentNotes = '';
 
     function showPage(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
-        
         const adminFooter = document.getElementById('admin-footer');
-        if(pageId === 'page-client') {
-            if(adminFooter) adminFooter.style.display = 'none';
-        } else {
-            if(adminFooter) adminFooter.style.display = 'block';
+        if(pageId === 'page-client') { 
+            if(adminFooter) adminFooter.style.display = 'none'; 
+        } else { 
+            if(adminFooter) adminFooter.style.display = 'block'; 
         }
     }
 
-    function goHome() {
-        showPage('page-home');
-        updateStats();
-    }
-
+    function goHome() { showPage('page-home'); updateStats(); }
+    
     function goToData() {
         showPage('page-data');
+        document.getElementById('nameInput').value = '';
         document.getElementById('emailInput').value = '';
         document.getElementById('passInput').value = '';
         document.getElementById('notesInput').value = '';
     }
 
     // ==========================================
-    // 8. توليد QR وحفظ
+    // دالة المعالجة والتوليد للـ QR والأرشفة
     // ==========================================
     async function generateQR() {
+        const name = document.getElementById('nameInput').value.trim();
         const email = document.getElementById('emailInput').value.trim();
         const pass = document.getElementById('passInput').value.trim();
         const notes = document.getElementById('notesInput').value.trim();
 
-        if (!email || !pass) {
-            alert('نظام البيت الرقمي: الرجاء ملء الإيميل وكلمة المرور لإتمام العملية!');
+        if (!name || !email || !pass) {
+            alert('نظام البيت الرقمي: يرجى ملء كافة البيانات الأساسية (الاسم، البريد، الرمز) بنجاح قبل المتابعة!');
             return;
         }
 
         try {
-            const recordId = await addRecord(email, pass, notes);
+            await addRecord(name, email, pass, notes);
             
+            currentName = name;
             currentEmail = email;
             currentPass = pass;
             currentNotes = notes;
 
+            const formattedTime = formatArabicDateTime(new Date().toISOString());
+
+            document.getElementById('displayName').textContent = name;
             document.getElementById('displayEmail').textContent = email;
             document.getElementById('displayPass').textContent = pass;
-            document.getElementById('displayNotes').textContent = notes || 'لا توجد ملاحظات';
+            document.getElementById('displayDate').textContent = formattedTime;
+            document.getElementById('displayNotes').textContent = notes || 'لا توجد ملاحظات إضافية مضافة';
 
             const baseUrl = window.location.href.split('?')[0];
-            const clientUrl = baseUrl + '?mode=client&email=' + encodeURIComponent(email) + '&pass=' + encodeURIComponent(pass);
+            const clientUrl = baseUrl + '?mode=client&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email) + '&pass=' + encodeURIComponent(pass);
 
-            // QR الرئيسي
+            // توليد QR الرئيسي المعروض بصفحة المسؤول داخل اللوحة الإدارية الزجاجية
             const container = document.getElementById('qrcode-container');
             container.innerHTML = '';
-            qrCodeInstance = new QRCode(container, {
-                text: clientUrl,
-                width: 220,
-                height: 220,
-                colorDark: "#2c3e50",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
+            new QRCode(container, {
+                text: clientUrl, width: 220, height: 220, colorDark: "#012b30", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H
             });
 
-            // QR للتصدير
+            // توليد QR المخصص والمنعزل المتوافق داخل لوحة تصدير الصور الثابتة
             const exportContainer = document.getElementById('export-qr-code');
             exportContainer.innerHTML = '';
-            exportQrInstance = new QRCode(exportContainer, {
-                text: clientUrl,
-                width: 200,
-                height: 200,
-                colorDark: "#2c3e50",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
+            new QRCode(exportContainer, {
+                text: clientUrl, width: 200, height: 200, colorDark: "#012b30", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H
             });
 
+            document.getElementById('exportName').textContent = name;
             document.getElementById('exportEmail').textContent = email;
             document.getElementById('exportPass').textContent = pass;
-            document.getElementById('exportNotes').textContent = notes || 'لا توجد ملاحظات';
+            document.getElementById('exportDate').textContent = formattedTime;
+            document.getElementById('exportNotes').textContent = notes || 'لا توجد ملاحظات إضافية مضافة';
 
             showPage('page-result');
             updateStats();
-            
-        } catch (error) {
-            alert('نظام البيت الرقمي - خطأ في حفظ البيانات: ' + error);
+        } catch (error) { 
+            alert('نظام البيت الرقمي - خطأ في معالجة وحفظ المدخلات: ' + error); 
         }
     }
 
     // ==========================================
-    // 9. تصدير كصورة 
+    // دالة تصدير كرت تسليم الحساب الفاخر كصورة عالية الدقة للعميل
     // ==========================================
     async function exportAsImage() {
         try {
             const element = document.getElementById('qr-export-container');
-            
-            element.style.position = 'relative';
-            element.style.left = '0';
+            element.style.position = 'relative'; 
+            element.style.left = '0'; 
             element.style.top = '0';
-            element.style.display = 'block';
+            element.style.display = 'block'; 
             element.style.margin = '0 auto';
             
-            await new Promise(resolve => setTimeout(resolve, 600));
+            // إعطاء مهلة زمنية للتأكد من رندرة مكتبة الـ QR بالكامل قبل اللقطة
+            await new Promise(resolve => setTimeout(resolve, 700));
             
-            const canvas = await html2canvas(element, {
-                scale: 2,
-                useCORS: true,
-                backgroundColor: '#ffffff',
-                logging: false,
-                allowTaint: true
+            const canvas = await html2canvas(element, { 
+                scale: 2.5, 
+                useCORS: true, 
+                backgroundColor: null, 
+                logging: false, 
+                allowTaint: true 
             });
             
-            element.style.position = 'absolute';
-            element.style.left = '-9999px';
+            element.style.position = 'absolute'; 
+            element.style.left = '-9999px'; 
             element.style.top = '0';
             
             const link = document.createElement('a');
-            link.download = `كود_دخول_البيت_الرقمي_${currentEmail}.png`;
+            link.download = `كرت_تسليم_البيت_الرقمي_${currentName}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
-            
-            alert('✅ نظام البيت الرقمي: تم تصدير الصورة للعميل بنجاح وبداخلها الملاحظات!');
-            
-        } catch (error) {
-            console.error('خطأ في التصدير:', error);
-            alert('نظام البيت الرقمي - خطأ في تصدير الصورة: ' + error);
+            alert('✅ نظام البيت الرقمي: تم تصدير وحفظ الكرت الفاخر بنجاح متكامل بالتوقيت والهوية المعتمدة للمتجر!');
+        } catch (error) { 
+            alert('نظام البيت الرقمي - تعذر تصدير الصورة الفاخرة: ' + error); 
         }
     }
 
     // ==========================================
-    // 10. تهيئة واجهة الزبون
+    // محرك الفحص والتحقق من وضع العميل (Client Mode Decoding)
     // ==========================================
     function checkClientMode() {
         const params = new URLSearchParams(window.location.search);
         const mode = params.get('mode');
+        const name = params.get('name');
         const email = params.get('email');
         const pass = params.get('pass');
 
         if (mode === 'client' && email && pass) {
             showPage('page-client');
+            document.getElementById('clientName').textContent = name ? `${decodeURIComponent(name)}` : 'عميلنا العزيز';
             document.getElementById('clientEmail').textContent = decodeURIComponent(email);
             document.getElementById('clientPass').textContent = decodeURIComponent(pass);
 
+            // تجميد وتعطيل أزرار الرجوع لمتصفح الزبون لحفظ الهوية والعزل التام للوحة الإدارية
             history.pushState(null, null, location.href);
-            window.onpopstate = function () {
-                history.go(1);
-            };
+            window.onpopstate = function () { history.go(1); };
         } else {
-            if (!document.querySelector('.page.active') || document.getElementById('page-client').classList.contains('active')) {
-                goHome();
+            if (!document.querySelector('.page.active') || document.getElementById('page-client').classList.contains('active')) { 
+                goHome(); 
             }
         }
     }
 
-    // ==========================================
-    // 11. تشغيل التطبيق
-    // ==========================================
+    // تهيئة النظام الإداري وقاعدة البيانات محلياً بمجرد تحميل الصفحة بالكامل
     window.onload = async function() {
-        try {
-            await openDatabase();
-            console.log('✅ نظام البيت الرقمي: قاعدة البيانات متصلة وجاهزة للعمل');
-            await updateStats();
-        } catch (error) {
-            console.error('❌ نظام البيت الرقمي - خطأ:', error);
-            alert('نظام البيت الرقمي: تعذر فتح قاعدة البيانات.');
+        try { 
+            await openDatabase(); 
+            await updateStats(); 
+        } catch (error) { 
+            alert('نظام البيت الرقمي: واجهنا مشكلة تقنية في تشغيل قاعدة البيانات الداخلية الذكية للمتصفح.'); 
         }
-        
         checkClientMode();
     };
 </script>
-
 </body>
 </html>
