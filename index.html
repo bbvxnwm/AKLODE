@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مولد QR كود - البيت الرقمي</title>
+    <title>البيت الرقمي - مولد QR كود</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -32,6 +32,7 @@
             text-align: center;
             position: relative;
         }
+        /* ===== شعار البيت الرقمي ===== */
         .logo-container {
             text-align: center;
             margin-bottom: 20px;
@@ -42,10 +43,15 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        h1 {
+        /* ===== عنوان البيت الرقمي ===== */
+        .brand-title {
             color: #2c3e50;
-            margin-bottom: 10px;
-            font-size: 24px;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .brand-title span {
+            color: #3498db;
         }
         .subtitle {
             color: #7f8c8d;
@@ -110,6 +116,12 @@
         .btn-warning:hover {
             background: #e67e22;
         }
+        .btn-purple {
+            background: #8e44ad;
+        }
+        .btn-purple:hover {
+            background: #7d3c98;
+        }
         .qr-box {
             display: flex;
             justify-content: center;
@@ -145,6 +157,7 @@
             flex: 1;
             min-width: 120px;
         }
+        /* ===== تذييل الحقوق ===== */
         .footer-copyright {
             margin-top: 30px;
             padding-top: 20px;
@@ -159,6 +172,7 @@
         .footer-copyright .heart {
             color: #e74c3c;
         }
+        /* ===== صفحة الزبون ===== */
         #page-client .info-card {
             text-align: center;
             padding: 25px;
@@ -248,21 +262,84 @@
             font-size: 14px;
             padding: 10px;
         }
+
+        /* ===== صورة QR للتصدير (مخفية) ===== */
+        #qr-export-container {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 400px;
+            background: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            direction: rtl;
+        }
+        #qr-export-container .export-logo {
+            max-width: 80px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        #qr-export-container .export-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        #qr-export-container .export-title span {
+            color: #3498db;
+        }
+        #qr-export-container .export-qr {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        #qr-export-container .export-info {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 10px 0;
+            text-align: right;
+        }
+        #qr-export-container .export-info p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+        #qr-export-container .export-info span {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        #qr-export-container .export-footer {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 2px solid #ecf0f1;
+            font-size: 12px;
+            color: #95a5a6;
+        }
+        #qr-export-container .export-footer strong {
+            color: #2c3e50;
+        }
     </style>
 </head>
 <body>
 
 <div class="container" id="app">
+    <!-- ===== شعار البيت الرقمي ===== -->
     <div class="logo-container">
         <img src="images/ajpg.jpg" alt="البيت الرقمي" onerror="this.style.display='none'">
     </div>
 
+    <!-- ===== عنوان البيت الرقمي ===== -->
+    <div class="brand-title">🏠 <span>البيت الرقمي</span></div>
+    <p class="subtitle">نظام إدارة أكواد QR المتكامل</p>
+
     <!-- ========== الصفحة 1: الرئيسية ========== -->
     <div class="page active" id="page-home">
         <h1>📱 مولد QR</h1>
-        <p class="subtitle">البيت الرقمي - نظام إدارة أكواد QR</p>
+        <p class="subtitle">البيت الرقمي - أنشئ كوداً لعرض بيانات الدخول</p>
         
-        <div class="db-stats" id="dbStats">
+        <div class="db-stats">
             📊 عدد السجلات: <span id="recordCount">0</span>
         </div>
         
@@ -279,6 +356,7 @@
     <!-- ========== الصفحة 2: إدخال البيانات ========== -->
     <div class="page" id="page-data">
         <h1>✏️ أدخل بيانات الزبون</h1>
+        <p class="subtitle">البيت الرقمي - إدخال بيانات جديدة</p>
         <input type="email" id="emailInput" placeholder="البريد الإلكتروني">
         <input type="text" id="passInput" placeholder="كلمة المرور">
         <textarea id="notesInput" placeholder="ملاحظات إضافية (اختياري)"></textarea>
@@ -289,6 +367,7 @@
     <!-- ========== الصفحة 3: عرض النتيجة ========== -->
     <div class="page" id="page-result">
         <h1>✅ تم التوليد!</h1>
+        <p class="subtitle">البيت الرقمي - كود QR جاهز</p>
         <div class="qr-box" id="qrcode-container"></div>
         <div class="info-card">
             <p><span>📧 الإيميل:</span> <span id="displayEmail">---</span></p>
@@ -296,15 +375,16 @@
             <p><span>📝 الملاحظات:</span> <span id="displayNotes">---</span></p>
         </div>
         <div class="footer-actions">
-            <button class="btn" onclick="downloadPDF()">📄 تحميل PDF</button>
+            <button class="btn btn-purple" onclick="exportAsImage()">🖼️ تصدير كصورة</button>
             <button class="btn" style="background:#e67e22;" onclick="goHome()">🏠 الصفحة الرئيسية</button>
         </div>
-        <p class="note">📌 تم حفظ البيانات في قاعدة البيانات المحلية</p>
+        <p class="note">📌 تم حفظ البيانات في قاعدة بيانات <strong>البيت الرقمي</strong></p>
     </div>
 
     <!-- ========== الصفحة 4: عرض السجلات ========== -->
     <div class="page" id="page-records">
         <h1>📋 جميع السجلات</h1>
+        <p class="subtitle">البيت الرقمي - أرشيف الأكواد</p>
         <div class="db-stats">
             📊 إجمالي السجلات: <span id="totalRecords">0</span>
         </div>
@@ -320,19 +400,39 @@
     <!-- ========== الصفحة 5: صفحة الزبون ========== -->
     <div class="page" id="page-client">
         <div style="text-align: center; padding: 20px 0;">
-            <h1 style="color: #2c3e50;">👋 مرحباً بك</h1>
+            <div class="brand-title" style="font-size: 20px;">🏠 <span>البيت الرقمي</span></div>
+            <h1 style="color: #2c3e50; margin-top: 10px;">👋 مرحباً بك</h1>
             <p style="color: #7f8c8d; margin-bottom: 30px;">هذه بيانات الدخول الخاصة بك:</p>
             <div class="info-card">
                 <p><span>📧 الإيميل:</span> <span id="clientEmail">---</span></p>
                 <p><span>🔑 الباسورد:</span> <span id="clientPass">---</span></p>
             </div>
             <p class="client-warning">⚠️ هذه المعلومات سرية ولا تشاركها مع أي شخص</p>
+            <div class="footer-copyright" style="border-top: none; margin-top: 20px;">
+                © 2026 <strong>البيت الرقمي</strong> 
+                <span class="heart">❤️</span> جميع الحقوق محفوظة
+            </div>
         </div>
     </div>
 
+    <!-- ===== تذييل الحقوق ===== -->
     <div class="footer-copyright">
         © 2026 <strong>البيت الرقمي</strong> 
         <span class="heart">❤️</span> جميع الحقوق محفوظة
+    </div>
+</div>
+
+<!-- ===== حاوية التصدير كصورة (مخفية) ===== -->
+<div id="qr-export-container">
+    <img src="images/ajpg.jpg" alt="البيت الرقمي" class="export-logo" onerror="this.style.display='none'">
+    <div class="export-title">🏠 <span>البيت الرقمي</span></div>
+    <div class="export-qr" id="export-qr-code"></div>
+    <div class="export-info">
+        <p><span>📧 الإيميل:</span> <span id="exportEmail">---</span></p>
+        <p><span>🔑 الباسورد:</span> <span id="exportPass">---</span></p>
+    </div>
+    <div class="export-footer">
+        © 2026 <strong>البيت الرقمي</strong> ❤️ جميع الحقوق محفوظة
     </div>
 </div>
 
@@ -371,10 +471,8 @@
     }
 
     // ==========================================
-    // 2. عمليات قاعدة البيانات (CRUD)
+    // 2. عمليات قاعدة البيانات
     // ==========================================
-    
-    // إضافة سجل جديد
     function addRecord(email, password, notes = '') {
         return new Promise((resolve, reject) => {
             if (!db) {
@@ -401,7 +499,6 @@
         });
     }
 
-    // جلب جميع السجلات
     function getAllRecords() {
         return new Promise((resolve, reject) => {
             if (!db) {
@@ -418,7 +515,6 @@
         });
     }
 
-    // حذف سجل معين
     function deleteRecord(id) {
         return new Promise((resolve, reject) => {
             if (!db) {
@@ -435,7 +531,6 @@
         });
     }
 
-    // حذف جميع السجلات
     function clearAllRecords() {
         return new Promise((resolve, reject) => {
             if (!db) {
@@ -453,7 +548,7 @@
     }
 
     // ==========================================
-    // 3. تصدير قاعدة البيانات كـ JSON
+    // 3. تصدير قاعدة البيانات
     // ==========================================
     async function exportDatabase() {
         try {
@@ -463,21 +558,19 @@
                 return;
             }
             
-            // إنشاء ملف JSON
             const dataStr = JSON.stringify(records, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             
-            // تحميل الملف
             const link = document.createElement('a');
             link.href = url;
-            link.download = `QR_Database_${new Date().toISOString().slice(0,10)}.json`;
+            link.download = `QR_Database_البيت_الرقمي_${new Date().toISOString().slice(0,10)}.json`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
             
-            alert(`✅ تم تصدير ${records.length} سجل بنجاح!`);
+            alert(`✅ تم تصدير ${records.length} سجل بنجاح من البيت الرقمي!`);
         } catch (error) {
             alert('خطأ في التصدير: ' + error);
         }
@@ -487,7 +580,7 @@
     // 4. مسح قاعدة البيانات
     // ==========================================
     async function clearDatabase() {
-        if (!confirm('⚠️ هل أنت متأكد من مسح جميع السجلات؟ هذا الإجراء لا يمكن التراجع عنه!')) {
+        if (!confirm('⚠️ هل أنت متأكد من مسح جميع سجلات البيت الرقمي؟')) {
             return;
         }
         
@@ -502,7 +595,7 @@
     }
 
     // ==========================================
-    // 5. عرض السجلات في الواجهة
+    // 5. عرض السجلات
     // ==========================================
     async function showRecords() {
         try {
@@ -513,7 +606,7 @@
             totalSpan.textContent = records.length;
             
             if (records.length === 0) {
-                container.innerHTML = '<div class="empty-msg">📭 لا توجد سجلات حالياً</div>';
+                container.innerHTML = '<div class="empty-msg">📭 لا توجد سجلات في البيت الرقمي</div>';
             } else {
                 container.innerHTML = records.map(record => `
                     <div class="record-item">
@@ -536,9 +629,8 @@
         }
     }
 
-    // حذف سجل بواسطة ID
     async function deleteRecordById(id) {
-        if (!confirm('هل أنت متأكد من حذف هذا السجل؟')) return;
+        if (!confirm('هل أنت متأكد من حذف هذا السجل من البيت الرقمي؟')) return;
         
         try {
             await deleteRecord(id);
@@ -551,24 +643,25 @@
     }
 
     // ==========================================
-    // 6. تحديث إحصائيات قاعدة البيانات
+    // 6. تحديث الإحصائيات
     // ==========================================
     async function updateStats() {
         try {
             const records = await getAllRecords();
             document.getElementById('recordCount').textContent = records.length;
         } catch (error) {
-            console.error('خطأ في تحديث الإحصائيات:', error);
+            console.error('خطأ:', error);
         }
     }
 
     // ==========================================
-    // 7. وظائف التطبيق الأساسية
+    // 7. وظائف التطبيق
     // ==========================================
     let qrCodeInstance = null;
     let currentEmail = '';
     let currentPass = '';
     let currentNotes = '';
+    let exportQrInstance = null;
 
     function showPage(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -588,7 +681,7 @@
     }
 
     // ==========================================
-    // 8. توليد QR وحفظ في قاعدة البيانات
+    // 8. توليد QR وحفظ
     // ==========================================
     async function generateQR() {
         const email = document.getElementById('emailInput').value.trim();
@@ -601,7 +694,6 @@
         }
 
         try {
-            // حفظ في قاعدة البيانات
             const recordId = await addRecord(email, pass, notes);
             console.log('تم الحفظ برقم:', recordId);
             
@@ -609,18 +701,16 @@
             currentPass = pass;
             currentNotes = notes;
 
-            // عرض البيانات
             document.getElementById('displayEmail').textContent = email;
             document.getElementById('displayPass').textContent = pass;
             document.getElementById('displayNotes').textContent = notes || 'لا توجد ملاحظات';
 
-            // إنشاء QR
             const baseUrl = window.location.href.split('?')[0];
             const clientUrl = baseUrl + '?mode=client&email=' + encodeURIComponent(email) + '&pass=' + encodeURIComponent(pass);
 
+            // QR الرئيسي
             const container = document.getElementById('qrcode-container');
             container.innerHTML = '';
-
             qrCodeInstance = new QRCode(container, {
                 text: clientUrl,
                 width: 200,
@@ -629,6 +719,22 @@
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
+
+            // QR للتصدير (بحجم أكبر)
+            const exportContainer = document.getElementById('export-qr-code');
+            exportContainer.innerHTML = '';
+            exportQrInstance = new QRCode(exportContainer, {
+                text: clientUrl,
+                width: 180,
+                height: 180,
+                colorDark: "#2c3e50",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            // تحديث بيانات التصدير
+            document.getElementById('exportEmail').textContent = email;
+            document.getElementById('exportPass').textContent = pass;
 
             showPage('page-result');
             updateStats();
@@ -639,42 +745,51 @@
     }
 
     // ==========================================
-    // 9. تحميل PDF
+    // 9. تصدير كصورة (باستخدام html2canvas)
     // ==========================================
-    function downloadPDF() {
-        if (!currentEmail || !currentPass) {
-            alert('لا توجد بيانات لعمل PDF!');
-            return;
+    async function exportAsImage() {
+        try {
+            const element = document.getElementById('qr-export-container');
+            
+            // التأكد من ظهور الصورة قبل التصدير
+            element.style.position = 'relative';
+            element.style.left = '0';
+            element.style.top = '0';
+            element.style.display = 'block';
+            element.style.margin = '0 auto';
+            
+            // انتظار تحميل الصورة
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            const canvas = await html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+                allowTaint: true
+            });
+            
+            // إعادة إخفاء العنصر
+            element.style.position = 'absolute';
+            element.style.left = '-9999px';
+            element.style.top = '0';
+            
+            // تحميل الصورة
+            const link = document.createElement('a');
+            link.download = `QR_البيت_الرقمي_${currentEmail}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            alert('✅ تم تصدير الصورة بنجاح من البيت الرقمي!');
+            
+        } catch (error) {
+            console.error('خطأ في التصدير:', error);
+            alert('خطأ في تصدير الصورة: ' + error);
         }
-
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-
-        doc.setFontSize(22);
-        doc.setTextColor(44, 62, 80);
-        doc.text('البيت الرقمي - QR Code', 20, 30);
-
-        doc.setDrawColor(200);
-        doc.line(20, 38, 190, 38);
-
-        doc.setFontSize(16);
-        doc.setTextColor(0);
-        doc.text(`📧 الإيميل: ${currentEmail}`, 20, 60);
-        doc.text(`🔑 كلمة المرور: ${currentPass}`, 20, 80);
-        
-        if (currentNotes) {
-            doc.text(`📝 الملاحظات: ${currentNotes}`, 20, 100);
-        }
-
-        doc.setFontSize(10);
-        doc.setTextColor(150);
-        doc.text('© 2026 البيت الرقمي - جميع الحقوق محفوظة', 20, 270);
-
-        doc.save('QR_Data.pdf');
     }
 
     // ==========================================
-    // 10. صفحة الزبون (مقفلة)
+    // 10. صفحة الزبون
     // ==========================================
     function checkClientMode() {
         const params = new URLSearchParams(window.location.search);
@@ -705,8 +820,8 @@
             console.log('✅ قاعدة البيانات مفتوحة بنجاح');
             await updateStats();
         } catch (error) {
-            console.error('❌ خطأ في فتح قاعدة البيانات:', error);
-            alert('تعذر فتح قاعدة البيانات. تأكد من أن المتصفح يدعم IndexedDB.');
+            console.error('❌ خطأ:', error);
+            alert('تعذر فتح قاعدة البيانات.');
         }
         
         checkClientMode();
