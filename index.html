@@ -130,6 +130,7 @@
         .info-card p {
             font-size: 18px;
             margin: 8px 0;
+            word-break: break-all;
         }
         .info-card span {
             font-weight: bold;
@@ -169,7 +170,7 @@
             color: #e74c3c;
         }
 
-        /* ===== صفحة الزبون (المطورة) ===== */
+        /* ===== صفحة الزبون المتجاوبة والمحدثة ===== */
         #page-client {
             user-select: none;
         }
@@ -177,13 +178,14 @@
             background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
             border: 2px solid #3498db;
             border-radius: 20px;
-            padding: 35px 20px;
+            padding: 35px 25px;
             box-shadow: 0 15px 35px rgba(52, 152, 219, 0.15);
             text-align: center;
+            width: 100%;
         }
         .client-welcome-title {
             color: #2c3e50;
-            font-size: 22px;
+            font-size: 24px;
             margin: 15px 0 5px 0;
         }
         .client-subtitle {
@@ -199,7 +201,7 @@
             margin-bottom: 25px;
         }
         .credential-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             text-align: right;
         }
         .credential-group:last-child {
@@ -208,44 +210,47 @@
         .credential-group label {
             display: block;
             color: #34495e;
-            font-size: 14px;
-            margin-bottom: 8px;
+            font-size: 15px;
+            margin-bottom: 10px;
             font-weight: bold;
         }
+        /* تعديل تصميم الصندوق ليكون الزر بالأسفل */
         .input-with-copy {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 12px;
             background: #f8f9fa;
-            padding: 12px 15px;
+            padding: 15px;
             border-radius: 12px;
             border: 1px solid #e9ecef;
-            direction: ltr;
         }
         .input-with-copy span {
             font-family: monospace;
-            font-size: 16px;
+            font-size: 18px;
             color: #2c3e50;
             font-weight: bold;
             word-break: break-all;
-            text-align: left;
-            flex: 1;
-            margin-right: 15px;
+            text-align: center;
+            direction: ltr;
+            display: block;
+            padding: 4px 0;
         }
         .copy-btn {
             background: #3498db;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 12px;
             border-radius: 8px;
             cursor: pointer;
             font-family: inherit;
-            font-size: 13px;
+            font-size: 15px;
             font-weight: bold;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 5px;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
         }
         .copy-btn:hover {
             background: #2980b9;
@@ -258,8 +263,9 @@
             font-size: 14px;
             font-weight: bold;
             background: #fde8e8;
-            padding: 12px;
+            padding: 14px;
             border-radius: 10px;
+            line-height: 1.5;
         }
 
         /* ===== السجلات وقاعدة البيانات ===== */
@@ -293,10 +299,14 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            gap: 10px;
         }
         .record-item .record-data {
             font-size: 15px;
             line-height: 1.6;
+            flex: 1;
+            min-width: 200px;
+            word-break: break-all;
         }
         .record-item .record-data strong {
             color: #2c3e50;
@@ -330,6 +340,7 @@
             gap: 10px;
             flex-wrap: wrap;
             justify-content: center;
+            width: 100%;
         }
         .actions-row .btn {
             flex: 1;
@@ -385,6 +396,7 @@
         #qr-export-container .export-info p {
             font-size: 16px;
             margin: 6px 0;
+            word-break: break-all;
         }
         #qr-export-container .export-info span {
             font-weight: bold;
@@ -400,6 +412,62 @@
         #qr-export-container .export-footer strong {
             color: #2c3e50;
             font-size: 14px;
+        }
+
+        /* ==========================================
+           قواعد التجاوب الكامل مع كل الشاشات (Responsive)
+           ========================================== */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 25px 15px;
+                border-radius: 15px;
+            }
+            .brand-title {
+                font-size: 20px;
+            }
+            .subtitle {
+                font-size: 13px;
+                margin-bottom: 15px;
+            }
+            h1 {
+                font-size: 22px;
+            }
+            .client-wrapper {
+                padding: 25px 15px;
+            }
+            .client-welcome-title {
+                font-size: 20px;
+            }
+            .input-with-copy span {
+                font-size: 16px;
+            }
+            .info-card p {
+                font-size: 15px;
+            }
+            .footer-actions {
+                flex-direction: column;
+            }
+            .footer-actions .btn {
+                width: 100%;
+            }
+            .actions-row {
+                flex-direction: column;
+            }
+            .actions-row .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .input-with-copy span {
+                font-size: 14px;
+            }
+            .client-welcome-title {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
@@ -478,7 +546,7 @@
         </div>
     </div>
 
-    <!-- ========== الصفحة 5: صفحة الزبون (المطورة) ========== -->
+    <!-- ========== الصفحة 5: صفحة الزبون (المحدثة والمحسنة كلياً للموبايل) ========== -->
     <div class="page" id="page-client">
         <div class="client-wrapper">
             <div class="brand-title" style="font-size: 26px;">🏠 <span>البيت الرقمي</span></div>
@@ -486,25 +554,25 @@
             <p class="client-subtitle">لقد تم تجهيز بيانات الدخول الخاصة بك من قبل <strong>البيت الرقمي</strong></p>
             
             <div class="credentials-card">
-                <!-- مجموعة الإيميل -->
+                <!-- مجموعة الإيميل المحدثة -->
                 <div class="credential-group">
                     <label>البريد الإلكتروني:</label>
                     <div class="input-with-copy">
-                        <button class="copy-btn" onclick="copyData('clientEmail', this)">
-                            📋 نسخ
-                        </button>
                         <span id="clientEmail">---</span>
+                        <button class="copy-btn" onclick="copyData('clientEmail', this)">
+                            📋 نسخ البريد الإلكتروني
+                        </button>
                     </div>
                 </div>
                 
-                <!-- مجموعة الباسورد -->
+                <!-- مجموعة الباسورد المحدثة -->
                 <div class="credential-group">
                     <label>كلمة المرور الآمنة:</label>
                     <div class="input-with-copy">
-                        <button class="copy-btn" onclick="copyData('clientPass', this)">
-                            📋 نسخ
-                        </button>
                         <span id="clientPass">---</span>
+                        <button class="copy-btn" onclick="copyData('clientPass', this)">
+                            📋 نسخ كلمة المرور
+                        </button>
                     </div>
                 </div>
             </div>
@@ -525,7 +593,7 @@
     </div>
 </div>
 
-<!-- ===== حاوية التصدير كصورة (مخفية ومحدثة) ===== -->
+<!-- ===== حاوية التصدير كصورة ===== -->
 <div id="qr-export-container">
     <img src="a.jpg" alt="البيت الرقمي" class="export-logo" onerror="this.style.display='none'">
     <div class="export-title">🏠 <span>البيت الرقمي</span></div>
@@ -550,7 +618,7 @@
         
         navigator.clipboard.writeText(textToCopy).then(() => {
             const originalHTML = btnElement.innerHTML;
-            btnElement.innerHTML = '✅ تم النسخ';
+            btnElement.innerHTML = '✅ تم نسخ البيانات بنجاح';
             btnElement.classList.add('copied');
             
             setTimeout(() => {
@@ -827,7 +895,6 @@
 
         try {
             const recordId = await addRecord(email, pass, notes);
-            console.log('البيت الرقمي - تم الحفظ برقم التسلسل:', recordId);
             
             currentEmail = email;
             currentPass = pass;
@@ -864,7 +931,6 @@
                 correctLevel: QRCode.CorrectLevel.H
             });
 
-            // تعبئة بيانات التصدير (بما فيها الملاحظات للطباعة على الصورة)
             document.getElementById('exportEmail').textContent = email;
             document.getElementById('exportPass').textContent = pass;
             document.getElementById('exportNotes').textContent = notes || 'لا توجد ملاحظات';
