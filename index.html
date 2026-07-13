@@ -220,7 +220,7 @@
             padding: 12px 15px;
             border-radius: 12px;
             border: 1px solid #e9ecef;
-            direction: ltr; /* للحفاظ على تنسيق الايميل والباسورد */
+            direction: ltr;
         }
         .input-with-copy span {
             font-family: monospace;
@@ -338,7 +338,7 @@
             padding: 12px;
         }
 
-        /* ===== صورة QR للتصدير (مخفية) ===== */
+        /* ===== صورة QR للتصدير ===== */
         #qr-export-container {
             position: absolute;
             left: -9999px;
@@ -352,9 +352,10 @@
             direction: rtl;
         }
         #qr-export-container .export-logo {
-            max-width: 80px;
+            max-width: 100px;
             height: auto;
             margin-bottom: 10px;
+            border-radius: 10px;
         }
         #qr-export-container .export-title {
             font-size: 20px;
@@ -383,7 +384,7 @@
         }
         #qr-export-container .export-info p {
             font-size: 16px;
-            margin: 5px 0;
+            margin: 6px 0;
         }
         #qr-export-container .export-info span {
             font-weight: bold;
@@ -405,9 +406,9 @@
 <body>
 
 <div class="container" id="app">
-    <!-- ===== شعار البيت الرقمي ===== -->
+    <!-- ===== شعار البيت الرقمي المباشر ===== -->
     <div class="logo-container">
-        <img src="images/ajpg.jpg" alt="البيت الرقمي" onerror="this.style.display='none'">
+        <img src="a.jpg" alt="البيت الرقمي" onerror="this.style.display='none'">
     </div>
 
     <!-- ===== عنوان البيت الرقمي ===== -->
@@ -439,7 +440,7 @@
         <p class="subtitle">يرجى إدخال البيانات لإصدار الكود السري</p>
         <input type="email" id="emailInput" placeholder="البريد الإلكتروني للعميل">
         <input type="text" id="passInput" placeholder="كلمة المرور">
-        <textarea id="notesInput" placeholder="ملاحظات إضافية (خاصة بإدارة البيت الرقمي)"></textarea>
+        <textarea id="notesInput" placeholder="ملاحظات إضافية (ستظهر للعميل وعلى الصورة أيضاً)"></textarea>
         <button class="btn btn-success" onclick="generateQR()">🚀 توليد وحفظ في قاعدة البيت الرقمي</button>
         <button class="btn" style="background:#95a5a6;" onclick="goHome()">↩️ العودة للرئيسية</button>
     </div>
@@ -487,7 +488,7 @@
             <div class="credentials-card">
                 <!-- مجموعة الإيميل -->
                 <div class="credential-group">
-                    <label>البريد الإلكتروني (المرسل من البيت الرقمي):</label>
+                    <label>البريد الإلكتروني:</label>
                     <div class="input-with-copy">
                         <button class="copy-btn" onclick="copyData('clientEmail', this)">
                             📋 نسخ
@@ -524,15 +525,16 @@
     </div>
 </div>
 
-<!-- ===== حاوية التصدير كصورة (مخفية) ===== -->
+<!-- ===== حاوية التصدير كصورة (مخفية ومحدثة) ===== -->
 <div id="qr-export-container">
-    <img src="images/ajpg.jpg" alt="البيت الرقمي" class="export-logo" onerror="this.style.display='none'">
+    <img src="a.jpg" alt="البيت الرقمي" class="export-logo" onerror="this.style.display='none'">
     <div class="export-title">🏠 <span>البيت الرقمي</span></div>
     <div style="font-size: 15px; color: #7f8c8d; margin-bottom: 10px;">بيانات دخول حصرية للعميل</div>
     <div class="export-qr" id="export-qr-code"></div>
     <div class="export-info">
         <p><span>📧 الإيميل:</span> <span id="exportEmail">---</span></p>
         <p><span>🔑 الباسورد:</span> <span id="exportPass">---</span></p>
+        <p><span>📝 الملاحظات:</span> <span id="exportNotes">---</span></p>
     </div>
     <div class="export-footer">
         © 2026 <strong>البيت الرقمي</strong> ❤️ جميع الحقوق محفوظة
@@ -541,7 +543,7 @@
 
 <script>
     // ==========================================
-    // دالة النسخ لصفحة الزبون (البيت الرقمي)
+    // دالة النسخ لصفحة الزبون
     // ==========================================
     function copyData(elementId, btnElement) {
         const textToCopy = document.getElementById(elementId).innerText;
@@ -790,7 +792,6 @@
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
         
-        // إخفاء تذييل الإدارة في صفحة الزبون لأنها تحتوي على تذييل خاص بها
         const adminFooter = document.getElementById('admin-footer');
         if(pageId === 'page-client') {
             if(adminFooter) adminFooter.style.display = 'none';
@@ -863,8 +864,10 @@
                 correctLevel: QRCode.CorrectLevel.H
             });
 
+            // تعبئة بيانات التصدير (بما فيها الملاحظات للطباعة على الصورة)
             document.getElementById('exportEmail').textContent = email;
             document.getElementById('exportPass').textContent = pass;
+            document.getElementById('exportNotes').textContent = notes || 'لا توجد ملاحظات';
 
             showPage('page-result');
             updateStats();
@@ -887,7 +890,7 @@
             element.style.display = 'block';
             element.style.margin = '0 auto';
             
-            await new Promise(resolve => setTimeout(resolve, 500));
+            await new Promise(resolve => setTimeout(resolve, 600));
             
             const canvas = await html2canvas(element, {
                 scale: 2,
@@ -906,7 +909,7 @@
             link.href = canvas.toDataURL('image/png');
             link.click();
             
-            alert('✅ نظام البيت الرقمي: تم تصدير الصورة للعميل بنجاح!');
+            alert('✅ نظام البيت الرقمي: تم تصدير الصورة للعميل بنجاح وبداخلها الملاحظات!');
             
         } catch (error) {
             console.error('خطأ في التصدير:', error);
@@ -928,7 +931,6 @@
             document.getElementById('clientEmail').textContent = decodeURIComponent(email);
             document.getElementById('clientPass').textContent = decodeURIComponent(pass);
 
-            // منع الرجوع للصفحات الإدارية من خلال المتصفح
             history.pushState(null, null, location.href);
             window.onpopstate = function () {
                 history.go(1);
