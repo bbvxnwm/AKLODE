@@ -7,14 +7,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        /* نفس الستايلات السابقة مع تعديل طفيف */
         :root {
             --turquoise-bright: #00f2fe;
             --orange-bright: #ff7a00;
-            --glass-bg: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.2);
-            --text-main: #ffffff;
-            --text-secondary: #e2e8f0;
         }
 
         * {
@@ -33,7 +29,6 @@
             align-items: center;
             flex-direction: column;
             padding: 15px;
-            position: relative;
         }
 
         .container {
@@ -47,8 +42,6 @@
             width: 100%;
             max-width: 720px;
             text-align: center;
-            position: relative;
-            z-index: 1;
         }
 
         .logo-container {
@@ -72,7 +65,7 @@
             color: var(--turquoise-bright);
         }
         .subtitle {
-            color: var(--text-secondary);
+            color: #e2e8f0;
             font-size: 14px;
             margin-bottom: 18px;
             font-weight: 500;
@@ -257,7 +250,6 @@
 </div>
 
 <script>
-    // دالة نسخ البيانات
     function copyData(elementId, btnElement) {
         const textToCopy = document.getElementById(elementId).innerText;
         navigator.clipboard.writeText(textToCopy).then(() => {
@@ -273,7 +265,6 @@
         });
     }
 
-    // استخراج البيانات من الرابط
     function loadClientData() {
         const params = new URLSearchParams(window.location.search);
         const name = params.get('name');
@@ -285,7 +276,6 @@
             document.getElementById('clientEmail').textContent = decodeURIComponent(email);
             document.getElementById('clientPass').textContent = decodeURIComponent(pass);
         } else {
-            // إذا لم توجد بيانات، عرض رسالة خطأ
             document.querySelector('.client-wrapper').innerHTML = `
                 <h1 class="client-welcome-title">⚠️ رابط غير صحيح</h1>
                 <p class="client-subtitle">لم يتم العثور على بيانات الحساب. يرجى التواصل مع الدعم الفني.</p>
@@ -302,7 +292,6 @@
         history.go(1); 
     };
 
-    // تحميل البيانات عند فتح الصفحة
     window.onload = function() {
         loadClientData();
     };
