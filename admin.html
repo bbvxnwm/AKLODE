@@ -7,14 +7,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        /* نفس الستايلات السابقة */
         :root {
             --turquoise-bright: #00f2fe;
             --orange-bright: #ff7a00;
-            --glass-bg: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.2);
-            --text-main: #ffffff;
-            --text-secondary: #e2e8f0;
         }
 
         * {
@@ -33,7 +29,6 @@
             align-items: center;
             flex-direction: column;
             padding: 15px;
-            position: relative;
         }
 
         .container {
@@ -47,8 +42,6 @@
             width: 100%;
             max-width: 720px;
             text-align: center;
-            position: relative;
-            z-index: 1;
         }
 
         .logo-container {
@@ -72,7 +65,7 @@
             color: var(--turquoise-bright);
         }
         .subtitle {
-            color: var(--text-secondary);
+            color: #e2e8f0;
             font-size: 14px;
             margin-bottom: 18px;
             font-weight: 500;
@@ -102,7 +95,6 @@
             font-weight: bold;
             width: 100%;
             font-family: 'Tahoma', sans-serif;
-            transition: none;
         }
         input::placeholder, textarea::placeholder {
             color: #cbd5e1;
@@ -126,7 +118,6 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: none;
             display: inline-block;
             width: 100%;
         }
@@ -141,6 +132,9 @@
         }
         .btn-danger { 
             background: linear-gradient(135deg, #ff4757, #c0392b); 
+        }
+        .btn-gray {
+            background: linear-gradient(135deg, #4b5563, #374151);
         }
         
         .qr-box {
@@ -194,90 +188,19 @@
             min-width: 120px;
         }
 
-        .db-stats {
+        .info-banner {
             background: rgba(0, 242, 254, 0.12);
             border: 1px solid rgba(0, 242, 254, 0.2);
-            padding: 10px;
+            padding: 12px;
             border-radius: 10px;
             margin: 4px 0 10px 0;
             font-size: 14px;
             color: #ffffff;
             font-weight: bold;
         }
-        .search-box-container {
-            margin: 4px 0 12px 0;
-        }
-        .search-input {
-            border: 2px solid var(--turquoise-bright) !important;
-            background: rgba(255, 255, 255, 0.18) !important;
-        }
-        .records-list {
-            max-height: 350px;
-            overflow-y: auto;
-            text-align: left;
-            background: rgba(0, 0, 0, 0.15);
-            border-radius: 14px;
-            padding: 12px;
-            border: 1px solid var(--glass-border);
-        }
-        .record-item {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--glass-border);
-            padding: 14px;
-            margin: 10px 0;
-            border-radius: 12px;
-            border-right: 4px solid var(--turquoise-bright);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .record-item:first-child { margin-top: 0; }
-        .record-item .record-data {
-            font-size: 14px;
-            line-height: 1.5;
-            color: #ffffff;
-            flex: 1;
-            min-width: 180px;
-            word-break: break-all;
-        }
-        .record-item .record-date {
-            font-size: 11px;
-            color: #ffffff;
-            font-weight: bold;
-            background: rgba(0, 139, 148, 0.5);
-            padding: 4px 8px;
-            border-radius: 6px;
-        }
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 12px;
-            font-weight: bold;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            background: linear-gradient(135deg, #ff4757, #ff6b6b);
-            color: white;
-        }
-        .empty-msg {
-            color: #cbd5e1;
-            padding: 20px;
-            font-style: italic;
-            text-align: center;
-        }
-        .actions-row {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            width: 100%;
-        }
-        .actions-row .btn {
-            flex: 1;
-            min-width: 130px;
-            font-size: 14px;
-            padding: 11px;
+        .info-banner .highlight {
+            color: var(--turquoise-bright);
+            font-size: 18px;
         }
 
         .footer-copyright {
@@ -383,19 +306,6 @@
             .info-card p { font-size: 13px; margin: 6px 0; }
             .footer-actions { flex-direction: column; gap: 8px; }
             .footer-actions .btn { width: 100%; }
-            .actions-row { flex-direction: column; gap: 8px; }
-            .actions-row .btn { width: 100%; }
-            .record-item .record-data { font-size: 13px; min-width: 100%; }
-        }
-
-        @media (max-width: 360px) {
-            body { padding: 6px; }
-            .container { padding: 14px 8px; border-radius: 12px; }
-            .brand-title { font-size: 18px; }
-            h1 { font-size: 17px; }
-            .record-item { padding: 10px; gap: 6px; }
-            .record-item .record-data { font-size: 12px; }
-            .btn-small { padding: 4px 10px; font-size: 10px; }
         }
     </style>
 </head>
@@ -407,80 +317,50 @@
     </div>
 
     <div class="brand-title">🏠 <span>البيت الرقمي</span></div>
-    <p class="subtitle">لوحة الإدارة - نظام إدارة العملاء</p>
+    <p class="subtitle">لوحة الإدارة - مولد الباركود الفوري</p>
 
     <!-- الصفحة الرئيسية -->
     <div class="page active" id="page-home">
-        <h1>📱 مولد بيانات العملاء</h1>
-        <p class="subtitle">أنشئ كوداً مشفراً لعرض معلومات حسابات الزبائن</p>
+        <h1>📱 مولد الباركود الفوري</h1>
+        <p class="subtitle">أنشئ باركوداً لعرض بيانات العميل دون حفظ أي معلومات</p>
         
-        <div class="db-stats">
-            📊 إجمالي السجلات: <span id="recordCount">0</span> سجل
+        <div class="info-banner">
+            ⚡ نظام بدون حفظ بيانات <span class="highlight">|</span> يتم إنشاء الباركود وعرضه مباشرة
         </div>
         
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-            <button class="btn btn-success" onclick="goToData()">➕ توليد QR كود جديد</button>
-            <button class="btn btn-orange" onclick="showRecords()">📋 إدارة وأرشيف السجلات</button>
-            <div class="actions-row">
-                <button class="btn" style="background: linear-gradient(135deg, #2d3748, #1a202c);" onclick="exportDatabase()">⬇️ تحميل نسخة احتياطية</button>
-                <button class="btn btn-danger" onclick="clearDatabase()">🗑️ مسح الأرشيف</button>
-            </div>
-        </div>
+        <button class="btn btn-success" onclick="goToData()">➕ إنشاء باركود جديد</button>
     </div>
 
     <!-- صفحة إدخال البيانات -->
     <div class="page" id="page-data">
-        <h1>✏️ بيانات العميل الجديد</h1>
-        <p class="subtitle">تعبئة الحقول الأساسية لتوليد الرابط</p>
+        <h1>✏️ بيانات العميل</h1>
+        <p class="subtitle">أدخل بيانات العميل لإنشاء الباركود (لن يتم حفظ أي شيء)</p>
         <input type="text" id="nameInput" placeholder="اسم الزبون الكامل">
         <input type="email" id="emailInput" placeholder="البريد الإلكتروني">
         <input type="text" id="passInput" placeholder="كلمة المرور">
-        <textarea id="notesInput" placeholder="ملاحظات إضافية"></textarea>
-        <button class="btn btn-success" onclick="generateQR()">🚀 إصدار الكود والحفظ</button>
-        <button class="btn" style="background:#4b5563;" onclick="goHome()">↩️ إلغاء والعودة</button>
+        <textarea id="notesInput" placeholder="ملاحظات إضافية (اختياري)"></textarea>
+        <button class="btn btn-success" onclick="generateQR()">🚀 إنشاء الباركود</button>
+        <button class="btn btn-gray" onclick="goHome()">↩️ إلغاء والعودة</button>
     </div>
 
     <!-- صفحة النتيجة -->
     <div class="page" id="page-result">
-        <h1>✅ تم الحفظ والتوليد!</h1>
-        <p class="subtitle">تم ترحيل البيانات وإنشاء كود الدخول</p>
+        <h1>✅ تم إنشاء الباركود!</h1>
+        <p class="subtitle">الباركود جاهز للاستخدام (لم يتم حفظ أي بيانات)</p>
         <div class="qr-box" id="qrcode-container"></div>
         <div class="info-card">
             <p><span class="label-tag">👤 الاسم:</span> <span class="value-tag" id="displayName">---</span></p>
             <p><span class="label-tag">📧 الإيميل:</span> <span class="value-tag" id="displayEmail">---</span></p>
             <p><span class="label-tag">🔑 كلمة المرور:</span> <span class="value-tag" id="displayPass">---</span></p>
-            <p><span class="label-tag">📅 تاريخ الإصدار:</span> <span id="displayDate" style="font-weight:bold; color:var(--orange-bright);">---</span></p>
+            <p><span class="label-tag">📅 تاريخ الإنشاء:</span> <span id="displayDate" style="font-weight:bold; color:var(--orange-bright);">---</span></p>
             <p><span class="label-tag">📝 الملاحظات:</span> <span class="value-tag" id="displayNotes">---</span></p>
         </div>
         <div class="note">
-            ⚠️ إخلاء مسؤولية: البيت الرقمي غير مسؤول عن ضياع الكرت أو نسيان البيانات بعد التسليم.
+            ⚠️ ملاحظة: لم يتم حفظ أي بيانات. الباركود يعمل مباشرة من الرابط.
         </div>
         <div class="footer-actions">
             <button class="btn btn-orange" onclick="exportAsImage()">🖼️ تصدير الكرت كصورة</button>
-            <button class="btn" style="background: linear-gradient(135deg, #4b5563, #374151);" onclick="goHome()">🏠 العودة للرئيسية</button>
-        </div>
-    </div>
-
-    <!-- صفحة الأرشيف -->
-    <div class="page" id="page-records">
-        <h1>📋 أرشيف السجلات</h1>
-        <p class="subtitle">استعراض وتصفية الحسابات المسجلة</p>
-        
-        <div class="db-stats">
-            📊 إجمالي الكروت: <span id="totalRecords">0</span> كرت
-        </div>
-        
-        <div class="search-box-container">
-            <input type="text" id="searchInput" class="search-input" oninput="filterRecords()" placeholder="🔍 ابحث باسم، إيميل، باسورد...">
-        </div>
-
-        <div class="records-list" id="recordsList">
-            <div class="empty-msg">الأرشيف فارغ حالياً</div>
-        </div>
-        
-        <div class="actions-row">
-            <button class="btn btn-success" onclick="exportDatabase()">⬇️ تصدير النسخة الاحتياطية</button>
-            <button class="btn" style="background:#4b5563;" onclick="goHome()">↩️ رجوع للرئيسية</button>
+            <button class="btn btn-gray" onclick="goHome()">🏠 العودة للرئيسية</button>
         </div>
     </div>
 
@@ -511,39 +391,34 @@
 </div>
 
 <script>
-    // ====== كود الإدارة كاملاً ======
-    
-    // إعدادات الحماية
+    // ====== إعدادات الحماية ======
     const ADMIN_CONFIG = {
         password: "admin123", // غيّر هذه لكلمة سر قوية
         sessionKey: 'admin_access_2026'
     };
 
-    // دالة التحقق من صلاحية الدخول
     function checkAdminAccess() {
-        // إذا كان هناك جلسة نشطة
         const hasAccess = sessionStorage.getItem(ADMIN_CONFIG.sessionKey);
         if (hasAccess === 'true') {
             return true;
         }
 
-        // طلب كلمة المرور
         const entered = prompt('🔐 أدخل كلمة المرور للدخول للوحة الإدارة:');
         if (entered === ADMIN_CONFIG.password) {
             sessionStorage.setItem(ADMIN_CONFIG.sessionKey, 'true');
             return true;
         } else {
-            alert('❌ كلمة المرور غير صحيحة! سيتم توجيهك للصفحة الرئيسية.');
-            // توجيه لصفحة العميل (index.html)
+            alert('❌ كلمة المرور غير صحيحة!');
             window.location.href = window.location.href.replace('admin.html', 'index.html');
             return false;
         }
     }
 
-    // ====== باقي كود الإدارة ======
-    function formatArabicDateTime(dateString) {
-        if (!dateString) return '---';
-        const date = new Date(dateString);
+    // ====== دوال إنشاء الباركود ======
+    let currentName = '', currentEmail = '', currentPass = '', currentNotes = '';
+
+    function formatArabicDateTime() {
+        const date = new Date();
         const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
         const dayName = days[date.getDay()];
         const year = date.getFullYear();
@@ -553,4 +428,131 @@
         const minutes = String(date.getMinutes()).padStart(2, '0');
         const ampm = hours >= 12 ? 'مساءً' : 'صباحاً';
         hours = hours % 12;
-        hours = hours ? hours : 
+        hours = hours ? hours : 12; 
+        return `${dayName}، ${year}/${month}/${day} - ${hours}:${minutes} ${ampm}`;
+    }
+
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+    }
+
+    function goHome() { 
+        showPage('page-home'); 
+    }
+
+    function goToData() {
+        showPage('page-data');
+        document.getElementById('nameInput').value = '';
+        document.getElementById('emailInput').value = '';
+        document.getElementById('passInput').value = '';
+        document.getElementById('notesInput').value = '';
+    }
+
+    function generateQR() {
+        const name = document.getElementById('nameInput').value.trim();
+        const email = document.getElementById('emailInput').value.trim();
+        const pass = document.getElementById('passInput').value.trim();
+        const notes = document.getElementById('notesInput').value.trim();
+
+        if (!name || !email || !pass) {
+            alert('يرجى ملء الاسم، البريد، والرمز!');
+            return;
+        }
+
+        currentName = name; 
+        currentEmail = email; 
+        currentPass = pass; 
+        currentNotes = notes;
+        const formattedTime = formatArabicDateTime();
+
+        // عرض البيانات
+        document.getElementById('displayName').textContent = name;
+        document.getElementById('displayEmail').textContent = email;
+        document.getElementById('displayPass').textContent = pass;
+        document.getElementById('displayDate').textContent = formattedTime;
+        document.getElementById('displayNotes').textContent = notes || 'لا توجد ملاحظات';
+
+        // إنشاء الرابط
+        const baseUrl = window.location.href.split('?')[0].replace('admin.html', 'index.html');
+        const clientUrl = baseUrl + '?mode=client&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email) + '&pass=' + encodeURIComponent(pass);
+
+        // إنشاء الباركود للعرض
+        const container = document.getElementById('qrcode-container');
+        container.innerHTML = '';
+        new QRCode(container, { 
+            text: clientUrl, 
+            width: 200, 
+            height: 200, 
+            colorDark: "#012b30", 
+            colorLight: "#ffffff", 
+            correctLevel: QRCode.CorrectLevel.H 
+        });
+
+        // إنشاء الباركود للتصدير
+        const exportContainer = document.getElementById('export-qr-code');
+        exportContainer.innerHTML = '';
+        new QRCode(exportContainer, { 
+            text: clientUrl, 
+            width: 180, 
+            height: 180, 
+            colorDark: "#012b30", 
+            colorLight: "#ffffff", 
+            correctLevel: QRCode.CorrectLevel.H 
+        });
+
+        // تحديث بيانات التصدير
+        document.getElementById('exportName').textContent = name;
+        document.getElementById('exportEmail').textContent = email;
+        document.getElementById('exportPass').textContent = pass;
+        document.getElementById('exportDate').textContent = formattedTime;
+        document.getElementById('exportNotes').textContent = notes || 'لا توجد ملاحظات';
+
+        showPage('page-result');
+    }
+
+    // ====== تصدير الصورة ======
+    async function exportAsImage() {
+        try {
+            const element = document.getElementById('qr-export-container');
+            element.style.position = 'relative'; 
+            element.style.left = '0'; 
+            element.style.top = '0';
+            element.style.display = 'block'; 
+            element.style.margin = '0 auto';
+            
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            const canvas = await html2canvas(element, { 
+                scale: 2, 
+                useCORS: true, 
+                backgroundColor: null, 
+                logging: false, 
+                allowTaint: true 
+            });
+            
+            element.style.position = 'absolute'; 
+            element.style.left = '-9999px'; 
+            element.style.top = '0';
+            
+            const link = document.createElement('a');
+            link.download = `كرت_البيت_الرقمي_${currentName || 'عميل'}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            alert('✅ تم تصدير الكرت بنجاح!');
+        } catch (error) { 
+            alert('تعذر تصدير الصورة: ' + error); 
+        }
+    }
+
+    // ====== تحميل الصفحة ======
+    window.onload = function() {
+        if (!checkAdminAccess()) {
+            return;
+        }
+        showPage('page-home');
+    };
+</script>
+
+</body>
+</html>
