@@ -2,24 +2,17 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <!-- منع الزوم نهائياً وتثبيت أبعاد الواجهة الاحترافية لشاشات الهواتف -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>البيت الرقمي - نظام Liquid Glass المتطور</title>
-    
-    <!-- السكربتات المعتمدة لتوليد الـ QR وتصدير الصور -->
+    <title>البيت الرقمي</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
     <style>
         :root {
             --turquoise-bright: #00f2fe;
-            --turquoise-dark: #008b94;
             --orange-bright: #ff7a00;
-            --orange-glow: #ff9f43;
-            --glass-bg: rgba(255, 255, 255, 0.12);
-            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
             --text-main: #ffffff;
-            --text-dark: #111e25;
             --text-secondary: #e2e8f0;
         }
 
@@ -30,184 +23,144 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* خلفية متموجة ديناميكية */
         body {
             font-family: 'Tahoma', sans-serif;
             background: linear-gradient(135deg, #004d55 0%, #111827 50%, #8f4400 100%);
-            background-size: 400% 400%;
-            animation: liquidBackground 16s ease infinite;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            padding: 20px;
+            padding: 15px;
             position: relative;
-            overflow-x: hidden;
         }
 
-        @keyframes liquidBackground {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .liquid-blob {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(90px);
-            z-index: -1;
-            opacity: 0.45;
-            pointer-events: none;
-        }
-        .blob-1 { top: -15%; left: -10%; width: 450px; height: 450px; background: var(--turquoise-bright); animation: drift 14s infinite alternate; }
-        .blob-2 { bottom: -15%; right: -10%; width: 500px; height: 500px; background: var(--orange-bright); animation: drift 18s infinite alternate-reverse; }
-
-        @keyframes drift {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(50px, 40px) scale(1.15); }
-        }
-
-        /* الحاوية الزجاجية الرئيسية */
         .container {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(25px) saturate(200%);
-            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border: 1px solid var(--glass-border);
-            padding: 40px 30px;
-            border-radius: 28px;
-            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+            padding: 25px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             width: 100%;
             max-width: 720px;
             text-align: center;
             position: relative;
             z-index: 1;
-            transition: all 0.3s ease;
         }
 
         .logo-container {
             text-align: center;
-            margin-bottom: 22px;
+            margin-bottom: 15px;
         }
         .logo-container img {
-            max-width: 120px;
+            max-width: 100px;
             height: auto;
-            border-radius: 22px;
-            border: 2px solid var(--glass-border);
-            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.25);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
         }
 
         .brand-title {
             color: #ffffff;
-            font-size: 30px;
+            font-size: 26px;
             font-weight: bold;
-            margin-bottom: 6px;
-            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+            margin-bottom: 4px;
         }
         .brand-title span {
             color: var(--turquoise-bright);
-            text-shadow: 0 0 18px rgba(0, 242, 254, 0.7);
         }
         .subtitle {
             color: var(--text-secondary);
-            font-size: 15px;
-            margin-bottom: 25px;
+            font-size: 14px;
+            margin-bottom: 18px;
             font-weight: 500;
         }
         h1 {
             color: #ffffff;
-            font-size: 25px;
-            margin-bottom: 6px;
+            font-size: 22px;
+            margin-bottom: 4px;
         }
 
         .page {
             display: none;
             flex-direction: column;
-            gap: 22px;
+            gap: 18px;
         }
         .page.active {
             display: flex;
         }
 
-        /* حقول الإدخال */
         input, textarea {
-            padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.25);
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.2);
             border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            font-size: 16px;
+            border-radius: 12px;
+            font-size: 15px;
             color: #ffffff;
             font-weight: bold;
-            transition: all 0.3s ease;
             width: 100%;
             font-family: 'Tahoma', sans-serif;
+            transition: none;
         }
         input::placeholder, textarea::placeholder {
             color: #cbd5e1;
             font-weight: normal;
         }
         input:focus, textarea:focus {
-            background: rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.25);
             border-color: var(--turquoise-bright);
             outline: none;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
         }
         textarea {
-            min-height: 95px;
+            min-height: 80px;
             resize: vertical;
         }
 
-        /* الأزرار الاحترافية للمتجر */
         .btn {
             color: white;
             border: none;
-            padding: 15px;
-            border-radius: 16px;
-            font-size: 18px;
+            padding: 13px;
+            border-radius: 12px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: none;
             display: inline-block;
             width: 100%;
         }
-        .btn:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.15);
+        .btn:active {
+            transform: scale(0.97);
         }
         .btn-success { 
-            background: linear-gradient(135deg, var(--turquoise-bright), var(--turquoise-dark));
-            box-shadow: 0 5px 18px rgba(0, 242, 254, 0.4);
+            background: linear-gradient(135deg, var(--turquoise-bright), #008b94);
         }
         .btn-orange {
             background: linear-gradient(135deg, var(--orange-bright), #cc6200);
-            box-shadow: 0 5px 18px rgba(255, 122, 0, 0.45);
         }
         .btn-danger { 
             background: linear-gradient(135deg, #ff4757, #c0392b); 
-            box-shadow: 0 5px 18px rgba(255, 71, 87, 0.35);
         }
         
         .qr-box {
             display: flex;
             justify-content: center;
-            margin: 10px 0;
-            padding: 18px;
-            background: rgba(255, 255, 255, 0.88);
-            border-radius: 22px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            margin: 8px 0;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 16px;
         }
         .info-card {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
             border: 1px solid var(--glass-border);
-            padding: 24px;
-            border-radius: 20px;
+            padding: 18px;
+            border-radius: 16px;
             text-align: right;
-            border-right: 6px solid var(--orange-bright);
+            border-right: 4px solid var(--orange-bright);
         }
         .info-card p {
-            font-size: 17px;
-            margin: 12px 0;
+            font-size: 15px;
+            margin: 8px 0;
             word-break: break-all;
             color: #ffffff;
         }
@@ -215,93 +168,88 @@
             font-weight: bold;
             color: var(--turquoise-bright);
         }
-        .info-card .value-tag {
-            font-weight: bold;
-            color: #ffffff;
-        }
         .note {
             color: #fff1f2;
-            font-size: 14px;
-            background: rgba(239, 68, 68, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 14px;
-            border-radius: 12px;
+            font-size: 13px;
+            background: rgba(239, 68, 68, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 12px;
+            border-radius: 10px;
             font-weight: bold;
             text-align: right;
             line-height: 1.5;
         }
         .footer-actions {
             display: flex;
-            gap: 14px;
+            gap: 10px;
             flex-wrap: wrap;
         }
         .footer-actions .btn {
             flex: 1;
-            min-width: 130px;
+            min-width: 120px;
         }
 
-        /* سجلات الأرشيف */
         .db-stats {
-            background: rgba(0, 242, 254, 0.18);
-            border: 1px solid rgba(0, 242, 254, 0.3);
-            padding: 14px;
-            border-radius: 14px;
-            margin: 5px 0 12px 0;
-            font-size: 16px;
+            background: rgba(0, 242, 254, 0.12);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 4px 0 10px 0;
+            font-size: 14px;
             color: #ffffff;
             font-weight: bold;
         }
         .search-box-container {
-            margin: 5px 0 15px 0;
+            margin: 4px 0 12px 0;
         }
         .search-input {
             border: 2px solid var(--turquoise-bright) !important;
-            background: rgba(255, 255, 255, 0.22) !important;
+            background: rgba(255, 255, 255, 0.18) !important;
         }
         .records-list {
-            max-height: 380px;
+            max-height: 350px;
             overflow-y: auto;
             text-align: left;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 18px;
-            padding: 16px;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 14px;
+            padding: 12px;
             border: 1px solid var(--glass-border);
         }
         .record-item {
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.08);
             border: 1px solid var(--glass-border);
-            padding: 18px;
-            margin: 12px 0;
-            border-radius: 14px;
-            border-right: 5px solid var(--turquoise-bright);
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border-right: 4px solid var(--turquoise-bright);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
         .record-item:first-child { margin-top: 0; }
         .record-item .record-data {
-            font-size: 15px;
-            line-height: 1.6;
+            font-size: 14px;
+            line-height: 1.5;
             color: #ffffff;
             flex: 1;
-            min-width: 210px;
+            min-width: 180px;
             word-break: break-all;
         }
         .record-item .record-date {
-            font-size: 12px;
+            font-size: 11px;
             color: #ffffff;
             font-weight: bold;
-            background: rgba(0, 139, 148, 0.6);
-            padding: 5px 10px;
-            border-radius: 8px;
+            background: rgba(0, 139, 148, 0.5);
+            padding: 4px 8px;
+            border-radius: 6px;
         }
         .btn-small {
-            padding: 9px 16px;
-            font-size: 13px;
+            padding: 6px 12px;
+            font-size: 12px;
             font-weight: bold;
-            border-radius: 10px;
+            border-radius: 8px;
             border: none;
             cursor: pointer;
             background: linear-gradient(135deg, #ff4757, #ff6b6b);
@@ -309,39 +257,36 @@
         }
         .empty-msg {
             color: #cbd5e1;
-            padding: 25px;
+            padding: 20px;
             font-style: italic;
             text-align: center;
         }
         .actions-row {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
             justify-content: center;
             width: 100%;
         }
         .actions-row .btn {
             flex: 1;
-            min-width: 145px;
-            font-size: 15px;
-            padding: 13px;
+            min-width: 130px;
+            font-size: 14px;
+            padding: 11px;
         }
 
-        /* 🔮 واجهة الزبون الزجاجية - فائقة الوضوح والاحترافية والخفة */
         .client-wrapper {
-            background: rgba(255, 255, 255, 0.16);
+            background: rgba(255, 255, 255, 0.12);
             border: 2px solid var(--turquoise-bright);
-            border-radius: 26px;
-            padding: 35px 25px;
-            box-shadow: 0 20px 50px rgba(0, 242, 254, 0.22), inset 0 1px 6px rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 25px 18px;
             text-align: center;
             width: 100%;
         }
         .client-welcome-title {
             color: #ffffff;
-            font-size: 30px;
-            margin: 18px 0 6px 0;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            font-size: 26px;
+            margin: 12px 0 4px 0;
         }
         .client-welcome-title span {
             color: var(--orange-bright);
@@ -349,143 +294,130 @@
         }
         .client-subtitle {
             color: #ffffff;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
         }
         .credentials-card {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 22px;
-            padding: 26px;
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
-            margin-bottom: 28px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 20px;
         }
         .credential-group {
-            margin-bottom: 22px;
+            margin-bottom: 16px;
             text-align: right;
         }
         .credential-group:last-child { margin-bottom: 0; }
         .credential-group label {
             display: block;
             color: var(--turquoise-bright);
-            font-size: 16px;
-            margin-bottom: 10px;
+            font-size: 14px;
+            margin-bottom: 8px;
             font-weight: bold;
         }
         .input-with-copy {
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 18px;
-            border-radius: 16px;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 14px;
+            border-radius: 12px;
             border: 1px solid #ffffff;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
         .input-with-copy span {
             font-family: 'Courier New', monospace;
-            font-size: 22px;
+            font-size: 18px;
             color: #0b1519;
             font-weight: bold;
             word-break: break-all;
             text-align: center;
             direction: ltr;
             display: block;
-            letter-spacing: 0.8px;
+            letter-spacing: 0.5px;
         }
         .copy-btn {
             background: linear-gradient(135deg, var(--orange-bright), #e66e00);
             color: white;
             border: none;
-            padding: 13px;
-            border-radius: 12px;
+            padding: 10px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
-            transition: all 0.3s ease;
         }
-        .copy-btn:hover {
-            transform: scale(1.02);
+        .copy-btn:active {
+            transform: scale(0.97);
         }
         .copy-btn.copied {
             background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
-            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.45);
         }
         .client-warning {
             color: #ffffff;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
-            background: rgba(231, 76, 60, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            padding: 15px;
-            border-radius: 14px;
-            line-height: 1.6;
+            background: rgba(231, 76, 60, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 12px;
+            border-radius: 10px;
+            line-height: 1.5;
             text-align: right;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         
-        /* تصميم بند إخلاء المسؤولية الحاسم والبارز جداً لحماية متجرك */
         .disclaimer-box {
             color: #fffbeb;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             background: linear-gradient(135deg, #b45309, #78350f);
             border: 1px solid var(--orange-bright);
-            padding: 15px;
-            border-radius: 14px;
-            line-height: 1.6;
+            padding: 12px;
+            border-radius: 10px;
+            line-height: 1.5;
             text-align: right;
-            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.25);
         }
 
         .footer-copyright {
-            margin-top: 35px;
-            padding-top: 22px;
+            margin-top: 25px;
+            padding-top: 16px;
             border-top: 1px solid var(--glass-border);
             text-align: center;
             color: #cbd5e1;
-            font-size: 14px;
+            font-size: 13px;
         }
         .footer-copyright strong {
             color: var(--turquoise-bright);
         }
         .footer-copyright .heart {
             color: var(--orange-bright);
-            animation: pulse 1.5s infinite;
             display: inline-block;
         }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.25); }
-            100% { transform: scale(1); }
-        }
 
-        /* 📸 كرت التصدير كصورة للزبون (شامل بند عدم المسؤولية الموثق) */
         #qr-export-container {
             position: absolute;
             left: -9999px;
             top: 0;
-            width: 480px;
+            width: 450px;
             background: linear-gradient(135deg, #012b30 0%, #090d0f 100%);
-            padding: 40px 35px;
+            padding: 30px 25px;
             text-align: center;
-            border-radius: 26px;
+            border-radius: 20px;
             border: 2px solid #00f2fe;
             direction: rtl;
         }
         #qr-export-container .export-logo {
-            max-width: 110px;
+            max-width: 90px;
             height: auto;
-            margin-bottom: 14px;
-            border-radius: 18px;
-            border: 1px solid rgba(0, 242, 254, 0.35);
+            margin-bottom: 10px;
+            border-radius: 14px;
+            border: 1px solid rgba(0, 242, 254, 0.3);
         }
         #qr-export-container .export-title {
-            font-size: 26px;
+            font-size: 22px;
             font-weight: bold;
             color: #ffffff;
-            margin-bottom: 16px;
+            margin-bottom: 10px;
         }
         #qr-export-container .export-title span {
             color: #00f2fe;
@@ -493,23 +425,23 @@
         #qr-export-container .export-qr {
             display: flex;
             justify-content: center;
-            margin: 22px 0;
-            padding: 18px;
+            margin: 16px 0;
+            padding: 14px;
             background: #ffffff;
-            border-radius: 18px;
+            border-radius: 14px;
         }
         #qr-export-container .export-info {
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            padding: 22px;
-            border-radius: 18px;
-            margin: 16px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px;
+            border-radius: 14px;
+            margin: 12px 0;
             text-align: right;
-            border-right: 6px solid #ff7a00;
+            border-right: 4px solid #ff7a00;
         }
         #qr-export-container .export-info p {
-            font-size: 16px;
-            margin: 10px 0;
+            font-size: 14px;
+            margin: 6px 0;
             color: #e2e8f0;
             word-break: break-all;
         }
@@ -518,236 +450,208 @@
             color: #00f2fe;
         }
         #qr-export-container .export-disclaimer {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.4);
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.3);
             color: #fca5a5;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 13px;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 12px;
             font-weight: bold;
             line-height: 1.5;
             text-align: right;
-            margin-top: 15px;
+            margin-top: 12px;
         }
         #qr-export-container .export-footer {
-            margin-top: 22px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            font-size: 13px;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 12px;
             color: #94a3b8;
         }
 
-        /* 📐 نظام التجاوب الشامل لكل أحجام الشاشات */
-        @media (min-width: 1200px) {
-            .container { max-width: 750px; padding: 45px 40px; }
-        }
-        @media (max-width: 992px) and (min-width: 769px) {
-            .container { max-width: 680px; padding: 35px 25px; }
-            .brand-title { font-size: 28px; }
-        }
-        @media (max-width: 768px) {
-            body { padding: 15px; }
-            .container { padding: 30px 20px; border-radius: 24px; }
-            .brand-title { font-size: 26px; }
-            h1 { font-size: 22px; }
-            .client-welcome-title { font-size: 26px; }
-        }
         @media (max-width: 480px) {
             body { padding: 10px; }
-            .container { padding: 25px 15px; border-radius: 20px; }
-            .brand-title { font-size: 23px; }
-            .subtitle { font-size: 13px; margin-bottom: 20px; }
-            h1 { font-size: 20px; }
-            input, textarea { padding: 12px 15px; font-size: 15px; border-radius: 12px; }
-            .btn { padding: 13px; font-size: 16px; border-radius: 12px; }
-            .client-wrapper { padding: 22px 14px; border-radius: 20px; }
-            .client-welcome-title { font-size: 22px; }
-            .client-subtitle { font-size: 14px; margin-bottom: 20px; }
-            .credentials-card { padding: 16px; border-radius: 16px; margin-bottom: 20px; }
-            .input-with-copy { padding: 14px; gap: 10px; border-radius: 12px; }
-            .input-with-copy span { font-size: 17px; }
-            .copy-btn { padding: 11px; font-size: 14px; border-radius: 10px; }
-            .info-card { padding: 16px; border-radius: 16px; }
-            .info-card p { font-size: 14px; margin: 10px 0; }
-            .footer-actions { flex-direction: column; gap: 10px; }
+            .container { padding: 20px 12px; border-radius: 16px; }
+            .brand-title { font-size: 22px; }
+            .subtitle { font-size: 13px; margin-bottom: 14px; }
+            h1 { font-size: 19px; }
+            input, textarea { padding: 10px 12px; font-size: 14px; border-radius: 10px; }
+            .btn { padding: 11px; font-size: 15px; border-radius: 10px; }
+            .client-wrapper { padding: 18px 12px; border-radius: 16px; }
+            .client-welcome-title { font-size: 20px; }
+            .credentials-card { padding: 14px; border-radius: 12px; }
+            .input-with-copy { padding: 12px; gap: 8px; border-radius: 10px; }
+            .input-with-copy span { font-size: 15px; }
+            .copy-btn { padding: 9px; font-size: 13px; border-radius: 8px; }
+            .info-card { padding: 14px; border-radius: 12px; }
+            .info-card p { font-size: 13px; margin: 6px 0; }
+            .footer-actions { flex-direction: column; gap: 8px; }
             .footer-actions .btn { width: 100%; }
-            .actions-row { flex-direction: column; gap: 10px; }
+            .actions-row { flex-direction: column; gap: 8px; }
             .actions-row .btn { width: 100%; }
+            .record-item .record-data { font-size: 13px; min-width: 100%; }
         }
+
         @media (max-width: 360px) {
             body { padding: 6px; }
-            .container { padding: 20px 10px; border-radius: 16px; }
-            .brand-title { font-size: 20px; }
-            h1 { font-size: 18px; }
-            .db-stats { font-size: 13px; padding: 10px; }
-            .client-welcome-title { font-size: 19px; }
-            .input-with-copy span { font-size: 15px; letter-spacing: 0.3px; }
-            .copy-btn { font-size: 13px; padding: 10px; }
-            .client-warning, .disclaimer-box, .note { font-size: 12px; padding: 10px; }
-            .record-item { padding: 12px; gap: 8px; }
-            .record-item .record-data { font-size: 13px; min-width: 100%; }
-            .record-item .record-date { font-size: 11px; }
-            .btn-small { padding: 6px 12px; font-size: 11px; }
+            .container { padding: 14px 8px; border-radius: 12px; }
+            .brand-title { font-size: 18px; }
+            h1 { font-size: 17px; }
+            .client-welcome-title { font-size: 17px; }
+            .input-with-copy span { font-size: 13px; }
+            .copy-btn { font-size: 12px; padding: 8px; }
+            .client-warning, .disclaimer-box, .note { font-size: 11px; padding: 8px; }
+            .record-item { padding: 10px; gap: 6px; }
+            .record-item .record-data { font-size: 12px; }
+            .btn-small { padding: 4px 10px; font-size: 10px; }
         }
     </style>
 </head>
 <body>
 
-<div class="liquid-blob blob-1"></div>
-<div class="liquid-blob blob-2"></div>
-
 <div class="container" id="app">
-    <!-- الشعار التلقائي للمتجر -->
     <div class="logo-container">
         <img src="a.jpg" alt="البيت الرقمي" onerror="this.style.display='none'">
     </div>
 
     <div class="brand-title">🏠 <span>البيت الرقمي</span></div>
-    <p class="subtitle">نظام الإدارة الحصري لـ "البيت الرقمي"</p>
+    <p class="subtitle">نظام الإدارة الحصري</p>
 
-    <!-- الصفحة 1: الرئيسية الإدارية -->
     <div class="page active" id="page-home">
-        <h1>📱 مولد بيانات العملاء الذكي</h1>
-        <p class="subtitle">أنشئ كوداً مشفراً لعرض معلومات حسابات الزبائن بأمان تام</p>
+        <h1>📱 مولد بيانات العملاء</h1>
+        <p class="subtitle">أنشئ كوداً مشفراً لعرض معلومات حسابات الزبائن</p>
         
         <div class="db-stats">
-            📊 إجمالي سجلات نظام البيت الرقمي: <span id="recordCount">0</span> سجل
+            📊 إجمالي السجلات: <span id="recordCount">0</span> سجل
         </div>
         
-        <div style="display: flex; flex-direction: column; gap: 15px;">
-            <button class="btn btn-success" onclick="goToData()">➕ توليد QR كود جديد لزبون</button>
-            <button class="btn btn-orange" onclick="showRecords()">📋 إدارة وأرشيف سجلات المتجر</button>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            <button class="btn btn-success" onclick="goToData()">➕ توليد QR كود جديد</button>
+            <button class="btn btn-orange" onclick="showRecords()">📋 إدارة وأرشيف السجلات</button>
             <div class="actions-row">
-                <button class="btn" style="background: linear-gradient(135deg, #2d3748, #1a202c);" onclick="exportDatabase()">⬇️ تحميل نسخة احتياطية (JSON)</button>
-                <button class="btn btn-danger" onclick="clearDatabase()">🗑️ مسح وقائع الأرشيف نهائياً</button>
+                <button class="btn" style="background: linear-gradient(135deg, #2d3748, #1a202c);" onclick="exportDatabase()">⬇️ تحميل نسخة احتياطية</button>
+                <button class="btn btn-danger" onclick="clearDatabase()">🗑️ مسح الأرشيف</button>
             </div>
         </div>
     </div>
 
-    <!-- الصفحة 2: إدخال البيانات للزبون -->
     <div class="page" id="page-data">
-        <h1>✏️ بيانات حساب العميل الجديد</h1>
-        <p class="subtitle">يرجى تعبئة الحقول الأساسية لتوليد رابط التشفير للزبون</p>
-        <input type="text" id="nameInput" placeholder="اسم الزبون الكامـل">
-        <input type="email" id="emailInput" placeholder="البريد الإلكتروني للـحساب">
-        <input type="text" id="passInput" placeholder="كلمة المرور الآمنة">
-        <textarea id="notesInput" placeholder="ملاحظات وتفاصيل إضافية (ستظهر للزبون بشكل كامل وعلى الكرت أيضاً)"></textarea>
-        <button class="btn btn-success" onclick="generateQR()">🚀 إصدار الكود والحفظ في النظام</button>
-        <button class="btn" style="background:#4b5563;" onclick="goHome()">↩️ إلغاء والعودة للرئيسية</button>
+        <h1>✏️ بيانات العميل الجديد</h1>
+        <p class="subtitle">تعبئة الحقول الأساسية لتوليد الرابط</p>
+        <input type="text" id="nameInput" placeholder="اسم الزبون الكامل">
+        <input type="email" id="emailInput" placeholder="البريد الإلكتروني">
+        <input type="text" id="passInput" placeholder="كلمة المرور">
+        <textarea id="notesInput" placeholder="ملاحظات إضافية"></textarea>
+        <button class="btn btn-success" onclick="generateQR()">🚀 إصدار الكود والحفظ</button>
+        <button class="btn" style="background:#4b5563;" onclick="goHome()">↩️ إلغاء والعودة</button>
     </div>
 
-    <!-- الصفحة 3: عرض كود النتيجة المولد للادمن -->
     <div class="page" id="page-result">
-        <h1>✅ تم الحفظ والتوليد بنجاح!</h1>
-        <p class="subtitle">تم ترحيل البيانات للأرشيف وإنشاء كود الدخول الخاص بمتجرنا</p>
+        <h1>✅ تم الحفظ والتوليد!</h1>
+        <p class="subtitle">تم ترحيل البيانات وإنشاء كود الدخول</p>
         <div class="qr-box" id="qrcode-container"></div>
         <div class="info-card">
-            <p><span class="label-tag">👤 اسم الزبون:</span> <span class="value-tag" id="displayName">---</span></p>
-            <p><span class="label-tag">📧 الإيميل المربوط:</span> <span class="value-tag" id="displayEmail">---</span></p>
+            <p><span class="label-tag">👤 الاسم:</span> <span class="value-tag" id="displayName">---</span></p>
+            <p><span class="label-tag">📧 الإيميل:</span> <span class="value-tag" id="displayEmail">---</span></p>
             <p><span class="label-tag">🔑 كلمة المرور:</span> <span class="value-tag" id="displayPass">---</span></p>
-            <p><span class="label-tag">📅 تاريخ وساعة الإصدار:</span> <span id="displayDate" style="font-weight:bold; color:var(--orange-bright);">---</span></p>
-            <p><span class="label-tag">📝 الملاحظات المدونة:</span> <span class="value-tag" id="displayNotes">---</span></p>
+            <p><span class="label-tag">📅 تاريخ الإصدار:</span> <span id="displayDate" style="font-weight:bold; color:var(--orange-bright);">---</span></p>
+            <p><span class="label-tag">📝 الملاحظات:</span> <span class="value-tag" id="displayNotes">---</span></p>
         </div>
         <div class="note">
-            ⚠️ إخلاء مسؤولية: متجر البيت الرقمي غير مسؤول مطلقاً عن ضياع كرت الحساب، أو نسيان وفقدان البريد الإلكتروني والرمز السري بعد تسليمه للزبون. يرجى التنويه للحفظ بعناية!
+            ⚠️ إخلاء مسؤولية: البيت الرقمي غير مسؤول عن ضياع الكرت أو نسيان البيانات بعد التسليم.
         </div>
         <div class="footer-actions">
-            <button class="btn btn-orange" onclick="exportAsImage()">🖼️ تصدير الكرت كصورة للعميل</button>
+            <button class="btn btn-orange" onclick="exportAsImage()">🖼️ تصدير الكرت كصورة</button>
             <button class="btn" style="background: linear-gradient(135deg, #4b5563, #374151);" onclick="goHome()">🏠 العودة للرئيسية</button>
         </div>
     </div>
 
-    <!-- الصفحة 4: أرشيف السجلات والبحث الحي -->
     <div class="page" id="page-records">
-        <h1>📋 أرشيف سجلات البيت الرقمي</h1>
-        <p class="subtitle">استعراض وتصفية كافة الحسابات المنسقة والمسجلة مسبقاً</p>
+        <h1>📋 أرشيف السجلات</h1>
+        <p class="subtitle">استعراض وتصفية الحسابات المسجلة</p>
         
         <div class="db-stats">
-            📊 إجمالي الكروت المخزنة: <span id="totalRecords">0</span> كرت مفعل
+            📊 إجمالي الكروت: <span id="totalRecords">0</span> كرت
         </div>
         
         <div class="search-box-container">
-            <input type="text" id="searchInput" class="search-input" oninput="filterRecords()" placeholder="🔍 ابحث فوراً باسم الزبون، الإيميل، الباسورد...">
+            <input type="text" id="searchInput" class="search-input" oninput="filterRecords()" placeholder="🔍 ابحث باسم، إيميل، باسورد...">
         </div>
 
         <div class="records-list" id="recordsList">
-            <div class="empty-msg">أرشيف البيت الرقمي فارغ تماماً حالياً</div>
+            <div class="empty-msg">الأرشيف فارغ حالياً</div>
         </div>
         
         <div class="actions-row">
-            <button class="btn btn-success" onclick="exportDatabase()">⬇️ تصدير نسخة البيانات الاحتياطية</button>
+            <button class="btn btn-success" onclick="exportDatabase()">⬇️ تصدير النسخة الاحتياطية</button>
             <button class="btn" style="background:#4b5563;" onclick="goHome()">↩️ رجوع للرئيسية</button>
         </div>
     </div>
 
-    <!-- الصفحة 5: واجهة الزبون الحصرية المحدثة الفاخرة (وضوح فائق) -->
     <div class="page" id="page-client">
         <div class="client-wrapper">
-            <div class="brand-title" style="font-size: 28px;">🏠 <span>البيت الرقمي</span></div>
-            <h1 class="client-welcome-title">👋 مرحباً بك <span id="clientName">الزبون</span></h1>
-            <p class="client-subtitle">لقد قام قسم الدعم الفني في <strong>البيت الرقمي</strong> بتجهيز بيانات حسابك بأعلى وضوح وأمان:</p>
+            <div class="brand-title" style="font-size: 24px;">🏠 <span>البيت الرقمي</span></div>
+            <h1 class="client-welcome-title">👋 مرحباً <span id="clientName">الزبون</span></h1>
+            <p class="client-subtitle">تم تجهيز بيانات حسابك:</p>
             
             <div class="credentials-card">
                 <div class="credential-group">
-                    <label>البريد الإلكتروني لحسابك (Email):</label>
+                    <label>البريد الإلكتروني:</label>
                     <div class="input-with-copy">
                         <span id="clientEmail">---</span>
-                        <button class="copy-btn" onclick="copyData('clientEmail', this)">📋 نسخ البريد الإلكتروني</button>
+                        <button class="copy-btn" onclick="copyData('clientEmail', this)">📋 نسخ</button>
                     </div>
                 </div>
                 
                 <div class="credential-group">
-                    <label>كلمة المرور الآمنة (Password):</label>
+                    <label>كلمة المرور:</label>
                     <div class="input-with-copy">
                         <span id="clientPass">---</span>
-                        <button class="copy-btn" onclick="copyData('clientPass', this)">📋 نسخ كلمة المرور</button>
+                        <button class="copy-btn" onclick="copyData('clientPass', this)">📋 نسخ</button>
                     </div>
                 </div>
             </div>
             
             <div class="client-warning">
-                🔒 تنبيه خصوصية: هذه المعلومات مشفرة وسرية للغاية، يرجى عدم مشاركتها لضمان سلامة حسابك.
+                🔒 تنبيه: هذه المعلومات سرية، يرجى عدم مشاركتها.
             </div>
 
             <div class="disclaimer-box">
-                ⚠️ تنبيه هام جداً: نحن في إدارة "البيت الرقمي" نُخلي مسؤوليتنا الكاملة عن ضياع هذا الكرت أو نسيان وفقدان الإيميل والباسورد الخاص بالحساب بعد هذا التسليم. يرجى حفظ البيانات في مكان آمن فوراً.
+                ⚠️ تنبيه هام: البيت الرقمي غير مسؤول عن ضياع الكرت أو نسيان البيانات بعد التسليم.
             </div>
             
-            <div class="footer-copyright" style="border-top: none; margin-top: 25px;">
-                © 2026 تم الفحص والحفظ بواسطة مهندسي <strong>البيت الرقمي</strong> 
-                <br><span class="heart">❤️</span> جميع الحقوق محفوظة لمتجرنا
+            <div class="footer-copyright" style="border-top: none; margin-top: 20px;">
+                © 2026 <strong>البيت الرقمي</strong> <span class="heart">❤️</span>
             </div>
         </div>
     </div>
 
     <div class="footer-copyright" id="admin-footer">
-        © 2026 برمجة وإدارة <strong>البيت الرقمي</strong> <span class="heart">❤️</span> كافة الحقوق محفوظة
+        © 2026 <strong>البيت الرقمي</strong> <span class="heart">❤️</span>
     </div>
 </div>
 
-<!-- حاوية كرت التصدير الاحترافي كصورة للعميل -->
 <div id="qr-export-container">
     <img src="a.jpg" alt="البيت الرقمي" class="export-logo" onerror="this.style.display='none'">
     <div class="export-title">🏠 <span>البيت الرقمي</span></div>
-    <div style="font-size: 15px; color: #94a3b8; margin-bottom: 12px; font-weight: bold;">وثيقة تسليم بيانات دخول الحساب الرسمية</div>
+    <div style="font-size: 13px; color: #94a3b8; margin-bottom: 10px; font-weight: bold;">وثيقة تسليم بيانات الحساب</div>
     <div class="export-qr" id="export-qr-code"></div>
     <div class="export-info">
-        <p><span class="lbl">👤 اسم الزبون الكامل:</span> <span id="exportName">---</span></p>
-        <p><span class="lbl">📧 البريد الإلكتروني:</span> <span id="exportEmail">---</span></p>
-        <p><span class="lbl">🔑 كلمة المرور الآمنة:</span> <span id="exportPass">---</span></p>
-        <p><span class="lbl">📅 التاريخ والتوقيت الموثق:</span> <span id="exportDate" style="color: #ff7a00; font-weight: bold;">---</span></p>
-        <p><span class="lbl">📝 ملاحظات التفعيل:</span> <span id="exportNotes">---</span></p>
+        <p><span class="lbl">👤 الاسم:</span> <span id="exportName">---</span></p>
+        <p><span class="lbl">📧 الإيميل:</span> <span id="exportEmail">---</span></p>
+        <p><span class="lbl">🔑 كلمة المرور:</span> <span id="exportPass">---</span></p>
+        <p><span class="lbl">📅 التاريخ:</span> <span id="exportDate" style="color: #ff7a00; font-weight: bold;">---</span></p>
+        <p><span class="lbl">📝 ملاحظات:</span> <span id="exportNotes">---</span></p>
     </div>
     <div class="export-disclaimer">
-        🚨 تنبيه رسمي: إخلاء مسؤولية من البيت الرقمي؛ المتجر غير مسؤول عن ضياع كرت الصورة هذا أو نسيان الإيميل والباسورد الخاص بالحساب بعد عملية الاستلام. حافظ على بياناتك سرية وآمنة.
+        🚨 إخلاء مسؤولية: البيت الرقمي غير مسؤول عن ضياع الكرت أو نسيان البيانات.
     </div>
     <div class="export-footer">
-        شكرًا لثقتكم بـ <strong>البيت الرقمي</strong> ❤️ خياركم الأول للخدمات الرقمية
+        شكراً لثقتكم بـ <strong>البيت الرقمي</strong> ❤️
     </div>
 </div>
 
 <script>
-    // تنسيق الوقت والتاريخ العراقي المعتمد للمتجر
     function formatArabicDateTime(dateString) {
         if (!dateString) return '---';
         const date = new Date(dateString);
@@ -764,7 +668,6 @@
         return `${dayName}، ${year}/${month}/${day} - ${hours}:${minutes} ${ampm}`;
     }
 
-    // محرك البحث الحي داخل الأرشيف
     function filterRecords() {
         const query = document.getElementById('searchInput').value.toLowerCase().trim();
         const items = document.querySelectorAll('.record-item');
@@ -774,23 +677,21 @@
         });
     }
 
-    // دالة نسخ البيانات مع إشعار حي للزبون
     function copyData(elementId, btnElement) {
         const textToCopy = document.getElementById(elementId).innerText;
         navigator.clipboard.writeText(textToCopy).then(() => {
             const originalHTML = btnElement.innerHTML;
-            btnElement.innerHTML = '✅ تم نسخ البيانات للحافظة';
+            btnElement.innerHTML = '✅ تم النسخ';
             btnElement.classList.add('copied');
             setTimeout(() => {
                 btnElement.innerHTML = originalHTML;
                 btnElement.classList.remove('copied');
-            }, 2000);
-        }).catch(err => {
-            alert('نظام البيت الرقمي: تعذر نسخ النص تلقائياً!');
+            }, 1500);
+        }).catch(() => {
+            alert('تعذر نسخ النص!');
         });
     }
 
-    // إعدادات قاعدة البيانات المحلية المتطورة (IndexedDB)
     const DB_NAME = 'DigitalHome_LiquidQR_DB';
     const DB_VERSION = 1;
     const STORE_NAME = 'qr_records';
@@ -864,7 +765,7 @@
     async function exportDatabase() {
         try {
             const records = await getAllRecords();
-            if (records.length === 0) return alert('الأرشيف فارغ حالياً.');
+            if (records.length === 0) return alert('الأرشيف فارغ.');
             const dataStr = JSON.stringify(records, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -879,10 +780,10 @@
     }
 
     async function clearDatabase() {
-        if (!confirm('⚠️ تحذير: هل أنت متأكد من مسح جميع السجلات نهائياً؟')) return;
+        if (!confirm('⚠️ هل أنت متأكد من مسح جميع السجلات؟')) return;
         try {
             await clearAllRecords();
-            alert('تم مسح الأرشيف بالكامل.');
+            alert('تم مسح الأرشيف.');
             updateStats();
             showRecords();
         } catch (error) { alert('خطأ في المسح: ' + error); }
@@ -894,7 +795,7 @@
             const container = document.getElementById('recordsList');
             document.getElementById('totalRecords').textContent = records.length;
             if (records.length === 0) {
-                container.innerHTML = '<div class="empty-msg">📭 أرشيف البيت الرقمي فارغ حالياً</div>';
+                container.innerHTML = '<div class="empty-msg">📭 الأرشيف فارغ</div>';
             } else {
                 container.innerHTML = records.map(record => `
                     <div class="record-item">
@@ -904,7 +805,7 @@
                             <strong>🔑 الرمز:</strong> ${record.password}<br>
                             ${record.notes ? `<strong>📝 ملاحظات:</strong> ${record.notes}<br>` : ''}
                         </div>
-                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 9px;">
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
                             <span class="record-date">📅 ${formatArabicDateTime(record.date)}</span>
                             <button class="btn-small" onclick="deleteRecordById(${record.id})">🗑️ حذف</button>
                         </div>
@@ -916,7 +817,7 @@
     }
 
     async function deleteRecordById(id) {
-        if (!confirm('هل تود حذف هذا السجل نهائياً؟')) return;
+        if (!confirm('هل تود حذف هذا السجل؟')) return;
         try {
             await deleteRecord(id);
             showRecords();
@@ -953,7 +854,6 @@
         document.getElementById('notesInput').value = '';
     }
 
-    // دالة توليد الأكواد وحفظها
     async function generateQR() {
         const name = document.getElementById('nameInput').value.trim();
         const email = document.getElementById('emailInput').value.trim();
@@ -961,7 +861,7 @@
         const notes = document.getElementById('notesInput').value.trim();
 
         if (!name || !email || !pass) {
-            alert('يرجى ملء الاسم، البريد، والرمز أولاً!');
+            alert('يرجى ملء الاسم، البريد، والرمز!');
             return;
         }
 
@@ -979,15 +879,13 @@
             const baseUrl = window.location.href.split('?')[0];
             const clientUrl = baseUrl + '?mode=client&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email) + '&pass=' + encodeURIComponent(pass);
 
-            // لوحة الأدمن QR
             const container = document.getElementById('qrcode-container');
             container.innerHTML = '';
-            new QRCode(container, { text: clientUrl, width: 220, height: 220, colorDark: "#012b30", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
+            new QRCode(container, { text: clientUrl, width: 200, height: 200, colorDark: "#012b30", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
 
-            // كرت التصدير QR
             const exportContainer = document.getElementById('export-qr-code');
             exportContainer.innerHTML = '';
-            new QRCode(exportContainer, { text: clientUrl, width: 200, height: 200, colorDark: "#012b30", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
+            new QRCode(exportContainer, { text: clientUrl, width: 180, height: 180, colorDark: "#012b30", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
 
             document.getElementById('exportName').textContent = name;
             document.getElementById('exportEmail').textContent = email;
@@ -997,30 +895,28 @@
 
             showPage('page-result');
             updateStats();
-        } catch (error) { alert('خطأ في الحفظ والتوليد: ' + error); }
+        } catch (error) { alert('خطأ في الحفظ: ' + error); }
     }
 
-    // تصدير الكرت الموثق كصورة عالية الدقة للعميل
     async function exportAsImage() {
         try {
             const element = document.getElementById('qr-export-container');
             element.style.position = 'relative'; element.style.left = '0'; element.style.top = '0';
             element.style.display = 'block'; element.style.margin = '0 auto';
             
-            await new Promise(resolve => setTimeout(resolve, 700));
+            await new Promise(resolve => setTimeout(resolve, 500));
             
-            const canvas = await html2canvas(element, { scale: 2.5, useCORS: true, backgroundColor: null, logging: false, allowTaint: true });
+            const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: null, logging: false, allowTaint: true });
             element.style.position = 'absolute'; element.style.left = '-9999px'; element.style.top = '0';
             
             const link = document.createElement('a');
             link.download = `كرت_البيت_الرقمي_${currentName}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
-            alert('✅ تم تصدير وحفظ الكرت بنجاح متكامل!');
+            alert('✅ تم تصدير الكرت بنجاح!');
         } catch (error) { alert('تعذر تصدير الصورة: ' + error); }
     }
 
-    // فك التشفير والتحقق من رابط الزبون
     function checkClientMode() {
         const params = new URLSearchParams(window.location.search);
         const mode = params.get('mode');
@@ -1030,11 +926,10 @@
 
         if (mode === 'client' && email && pass) {
             showPage('page-client');
-            document.getElementById('clientName').textContent = name ? `${decodeURIComponent(name)}` : 'عميلنا العزيز';
+            document.getElementById('clientName').textContent = name ? `${decodeURIComponent(name)}` : 'عميلنا';
             document.getElementById('clientEmail').textContent = decodeURIComponent(email);
             document.getElementById('clientPass').textContent = decodeURIComponent(pass);
 
-            // تجميد الرجوع لمتصفح الزبون لضمان بقائه في واجهة استلام الحساب
             history.pushState(null, null, location.href);
             window.onpopstate = function () { history.go(1); };
         } else {
